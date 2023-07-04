@@ -6,13 +6,5 @@
   "singleQuote": true,
   "arrowParens": "avoid",
   "bracketSameLine": false,
-  "bracketSpacing": true,
-  "overrides": [
-    {
-      "files": "routes.js",
-      "options": {
-        "printWidth": 200
-      }
-    }
-  ]
+  "bracketSpacing": true
 }

@@ -13,6 +13,6 @@ export const getApiKey = () => {
 };
 
 // Set the global apiKey
-export const setApiKey = newApiKey => {
+export const setApiKey = (newApiKey: string) => {
   return getConfigStore().set('apiKey', newApiKey);
 };

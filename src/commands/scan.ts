@@ -1,5 +1,4 @@
-import check from 'check-more-types';
-import { Argument, InvalidArgumentError, Option } from 'commander';
+import { Argument, Command, InvalidArgumentError, Option } from 'commander';
 import { pollScanStatus, startScan } from '../aikidoApi.js';
 import { getApiKey } from '../configuration.js';
 import {
@@ -9,14 +8,61 @@ import {
   startSpinner,
 } from '../output.js';
 import chalk from 'chalk';
+import { Ora } from 'ora';
+
+export type TScanApiOptions = {
+  repo_id?: string | number;
+  base_commit_id?: string;
+  head_commit_id?: string;
+  branch_name?: string;
+  pull_request_metadata?: {
+    title?: string;
+    url?: string;
+  };
+  self_managed_scanners?: string[];
+  fail_on_dependency_scan?: boolean;
+  fail_on_sast_scan?: boolean;
+  fail_on_iac_scan?: boolean;
+  minimum_severity_level?: string;
+};
+
+type TScanArguments = {
+  repoId: string | number;
+  baseCommitId: string;
+  headCommitId: string;
+  branchName: string;
+  options: TScanApiOptions;
+  pollInterval: number;
+  onStart?: () => void | null;
+  onStartComplete?: (startResult: any) => void | null;
+  onStartFail?: (error: any) => void | null;
+  onScanStart?: (startResult: any) => void | null;
+  onScanComplete?: (startResult: any) => void | null;
+  onScanFail?: (error: any) => void | null;
+};
+
+type TScanCliOptions = {
+  pollInterval: number;
+};
+
+type TScanUserCliOptions = {
+  pullRequestTitle?: string;
+  pullRequestUrl?: string;
+  selfManagedScanners?: string[];
+  failOnDependencyScan?: boolean;
+  failOnSastScan?: boolean;
+  failOnIacScan?: boolean;
+  minimumSeverityLevel?: string;
+  pollInterval?: number;
+};
 
 async function cli(
-  repoId,
-  baseCommitId,
-  headCommitId,
-  branchName,
-  options,
-  command
+  repoId: string,
+  baseCommitId: string,
+  headCommitId: string,
+  branchName: string,
+  options: TScanUserCliOptions,
+  command: string
 ) {
   const apiKey = getApiKey();
 
@@ -27,22 +73,22 @@ async function cli(
   // Process command optiosn and group them into apiOptions hash
   const { apiOptions, cliOptions } = parseCliOptions(options);
 
-  let loader;
+  let loader: Ora | null;
 
   // Setup different scan() event handlers
-  const onStart = startResult => {
+  const onStart = () => {
     loader = startSpinner('Starting scan');
   };
 
-  const onStartComplete = startResult => {
+  const onStartComplete = () => {
     loader?.succeed('Scan started');
   };
 
-  const onScanStart = startResult => {
+  const onScanStart = () => {
     loader = startSpinner('Waiting for scan to complete');
   };
 
-  const onScanComplete = pollResult => {
+  const onScanComplete = (pollResult: any) => {
     if (pollResult.gate_passed === true) {
       loader?.succeed('Scan completed, no new issues found');
     } else {
@@ -58,7 +104,9 @@ async function cli(
       if (pollResult.issue_links) {
         outputLog(
           chalk.gray(
-            pollResult.issue_links.map(issueLink => '- ' + issueLink).join('\n')
+            pollResult.issue_links
+              .map((issueLink: string) => '- ' + issueLink)
+              .join('\n')
           )
         );
       }
@@ -70,7 +118,7 @@ async function cli(
     }
   };
 
-  const onFail = error => {
+  const onFail = (error: any) => {
     loader?.fail();
 
     if (error.response?.status && error.response?.status === 404) {
@@ -89,7 +137,7 @@ async function cli(
     baseCommitId,
     headCommitId,
     branchName,
-    apiOptions: apiOptions,
+    options: apiOptions,
     pollInterval: cliOptions.pollInterval,
     onStart,
     onStartComplete,
@@ -107,15 +155,15 @@ export const scan = async ({
   branchName,
   options = {},
   pollInterval = 5,
-  onStart = startResult => null,
+  onStart = () => null,
   onStartComplete = startResult => null,
-  onStartFail = startResult => null,
+  onStartFail = error => null,
   onScanStart = startResult => null,
   onScanComplete = pollResult => null,
   onScanFail = error => null,
-}) => {
+}: TScanArguments): Promise<void> => {
   onStart();
-  let result = null;
+  let result: any | null = null;
 
   // Initialize a scan and call onStartComplete, onStartFail
   // handlers where needed
@@ -165,9 +213,9 @@ export const scan = async ({
   pollStatus();
 };
 
-const parseCliOptions = userCliOptions => {
-  const apiOptions = {},
-    cliOptions = { pollInterval: 5 };
+const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
+  const apiOptions: TScanApiOptions = {};
+  const cliOptions: TScanCliOptions = { pollInterval: 5 };
 
   if (userCliOptions.pullRequestTitle) {
     apiOptions.pull_request_metadata = {
@@ -208,15 +256,18 @@ const parseCliOptions = userCliOptions => {
   return { apiOptions, cliOptions };
 };
 
-const validateCommitId = (value, prev) => {
-  if (check.commitId(value) === false) {
+const validateCommitId = (value: string) => {
+  const testCommitId = (commitId: string): boolean =>
+    commitId.length === 40 && /^[0-9a-f]{40}$/.test(commitId);
+
+  if (testCommitId(value) === false) {
     throw new InvalidArgumentError('Please provide a valid commit ID');
   }
 
   return value;
 };
 
-export const cliSetup = program =>
+export const cliSetup = (program: Command) =>
   program
     .command('scan')
     .addArgument(

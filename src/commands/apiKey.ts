@@ -1,8 +1,8 @@
-import { Argument } from 'commander';
+import { Argument, Command } from 'commander';
 import { setApiKey } from '../configuration.js';
 import { outputError, outputLog } from '../output.js';
 
-function cli(apiKey) {
+function cli(apiKey: string): void {
   if (apiKey && apiKey.trim().length != 128) {
     outputError('That does not seem right, please verify your api key');
   }
@@ -15,7 +15,7 @@ function cli(apiKey) {
   );
 }
 
-export const cliSetup = program =>
+export const cliSetup = (program: Command): Command =>
   program
     .command('apikey')
     .addArgument(

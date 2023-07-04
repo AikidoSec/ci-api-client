@@ -6,25 +6,38 @@
   "author": "Bert Devriese <bert@builtinbruges.com>",
   "private": false,
   "type": "module",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "bin": {
-    "aikido-cli": "./src/index.js"
+    "aikido-cli": "./lib/index.js"
   },
   "scripts": {
-    "build": "tsc"
+    "start": "nodemon --watch 'src/**/*.ts' --esm --exec 'ts-node' src/index.ts",
+    "build": "tsc -p .",
+    "local": "yarn build && yarn global add file:$PWD; aikido-cli",
+    "local-rm": "yarn global remove aikido-cli",
+    "//": {
+      "refresh": "rm -rf ./node_modules ./package-lock.json && npm install",
+      "create": "npm run build && npm run test"
+    }
   },
   "dependencies": {
-    "ajv": "^8.12.0",
     "axios": "^1.4.0",
     "chalk": "^5.3.0",
-    "check-more-types": "^2.24.0",
     "commander": "^11.0.0",
     "configstore": "^6.0.0",
     "dotenv": "^16.3.1",
     "ora": "^6.3.1"
   },
   "devDependencies": {
-    "prettier": "^2.8.8"
+    "@types/chalk": "^2.2.0",
+    "@types/commander": "^2.12.2",
+    "@types/configstore": "^6.0.0",
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^20.3.3",
+    "nodemon": "^2.0.22",
+    "prettier": "^2.8.8",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
   },
   "keywords": [
     "aikido",

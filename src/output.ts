@@ -1,8 +1,9 @@
-import ora from 'ora';
+import ora, { Ora } from 'ora';
 import { program } from './index.js';
+import { AxiosError } from 'axios';
 
 // Output a console message
-export const outputLog = message => {
+export const outputLog = (message: string): void => {
   if (!process.env.QUIET) {
     console.log(message);
   }
@@ -10,13 +11,13 @@ export const outputLog = message => {
 
 // Output an error message
 // Error output should not take into account the global "quiet" option
-export const outputError = (message, exitCode = 1) => {
+export const outputError = (message: string, exitCode: number = 1): void => {
   program.error(message, {
     exitCode,
   });
 };
 
-export const outputHttpError = axiosError => {
+export const outputHttpError = (axiosError: AxiosError): void => {
   if (axiosError.code === 'ECONNREFUSED') {
     outputError(
       'Could not connect to Aikido API. Please verify your network settings'
@@ -44,7 +45,7 @@ export const outputHttpError = axiosError => {
 // The result of this function can be null if the global "quiet" option
 // was set. Spinners should always be treated as optionals
 // (e.g. mySpinner?.stop())
-export const startSpinner = message => {
+export const startSpinner = (message: string): Ora | null => {
   if (process.env.QUIET) {
     return null;
   }
