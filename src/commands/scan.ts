@@ -1,5 +1,5 @@
 import { Argument, Command, InvalidArgumentError, Option } from 'commander';
-import { pollScanStatus, startScan } from '../aikidoApi.js';
+import { TScanApiOptions, pollScanStatus, startScan } from '../aikidoApi.js';
 import { getApiKey } from '../configuration.js';
 import {
   outputError,
@@ -9,22 +9,6 @@ import {
 } from '../output.js';
 import chalk from 'chalk';
 import { Ora } from 'ora';
-
-export type TScanApiOptions = {
-  repo_id?: string | number;
-  base_commit_id?: string;
-  head_commit_id?: string;
-  branch_name?: string;
-  pull_request_metadata?: {
-    title?: string;
-    url?: string;
-  };
-  self_managed_scanners?: string[];
-  fail_on_dependency_scan?: boolean;
-  fail_on_sast_scan?: boolean;
-  fail_on_iac_scan?: boolean;
-  minimum_severity_level?: string;
-};
 
 type TScanArguments = {
   repoId: string | number;
@@ -70,7 +54,7 @@ async function cli(
     outputError('Please set an api key using: aikido-cli apikey <key>');
   }
 
-  // Process command optiosn and group them into apiOptions hash
+  // Process command options and group them into apiOptions hash
   const { apiOptions, cliOptions } = parseCliOptions(options);
 
   let loader: Ora | null;
@@ -155,21 +139,21 @@ export const scan = async ({
   branchName,
   options = {},
   pollInterval = 5,
-  onStart = () => null,
-  onStartComplete = startResult => null,
-  onStartFail = error => null,
-  onScanStart = startResult => null,
-  onScanComplete = pollResult => null,
-  onScanFail = error => null,
+  onStart,
+  onStartComplete,
+  onStartFail,
+  onScanStart,
+  onScanComplete,
+  onScanFail,
 }: TScanArguments): Promise<void> => {
-  onStart();
+  onStart?.();
   let result: any | null = null;
 
   // Initialize a scan and call onStartComplete, onStartFail
   // handlers where needed
   try {
     result = await startScan({
-      repo_id: repoId,
+      repository_id: repoId,
       base_commit_id: baseCommitId,
       head_commit_id: headCommitId,
       branch_name: branchName,
@@ -177,17 +161,17 @@ export const scan = async ({
     });
 
     if (result.scan_id) {
-      onStartComplete(result);
+      onStartComplete?.(result);
     } else {
-      onStartFail(result);
+      onStartFail?.(result);
       return;
     }
   } catch (error) {
-    onStartFail(error);
+    onStartFail?.(error);
     return;
   }
 
-  onScanStart(result);
+  onScanStart?.(result);
   let pollResult;
 
   // Poll status with a setTimeout
@@ -202,10 +186,10 @@ export const scan = async ({
       if (pollResult.all_scans_completed === false) {
         setTimeout(pollStatus, pollInterval * 1000);
       } else {
-        onScanComplete(pollResult);
+        onScanComplete?.(pollResult);
       }
     } catch (error) {
-      onScanFail(error);
+      onScanFail?.(error);
     }
   };
 
@@ -303,10 +287,10 @@ export const cliSetup = (program: Command) =>
       new Option(
         '--self-managed-scanners <scanners...>',
         'Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL.'
-      ).choices(['checkov', 'json-sbomb'])
+      ).choices(['checkov', 'json-sbom'])
     )
     .option(
-      '--expected-amount-json-sbombs <amount>',
+      '--expected-amount-json-sboms <amount>',
       'The expected amount of json sbombs'
     )
     .addOption(

@@ -32,9 +32,21 @@ Using the `aikido-cli` to start new scans is very straightforward.
 
 ```sh
 $ aikido-cli scan <repository_id> <base_commit_id> <head_commit_id>
+
+# For more options and combinations, check the help output
+$ aikido-cli help scan
 ```
 
-For more information about these parameters, please refer to the
+Uploading custom test results:
+
+```sh
+$ aikido-cli upload --repository-id <repository_id> --type checkov --file <path_to_payload_file>
+
+# For more options and combinations, check the help output
+$ aikido-cli help upload
+```
+
+For more information about these parameters, please refer to `aikido-cli help`, `aikido-cli help scan` or `aikido-cli help upload`, or [the public ci api page](https://aikido-dev.notion.site/aikido-dev/Aikido-CI-API-78d318b5f5f7477ab072e12f94b21374).
 
 ## Help & contributing
 

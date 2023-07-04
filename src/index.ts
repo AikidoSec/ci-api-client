@@ -31,6 +31,7 @@ program
 // Load in all app commands and set them up in the `program` instance
 apiKey.cliSetup(program);
 scan.cliSetup(program);
+upload.cliSetup(program);
 
 // Override global process.env type
 declare global {

@@ -1,19 +1,5 @@
 import { Command } from 'commander';
-export type TScanApiOptions = {
-    repo_id?: string | number;
-    base_commit_id?: string;
-    head_commit_id?: string;
-    branch_name?: string;
-    pull_request_metadata?: {
-        title?: string;
-        url?: string;
-    };
-    self_managed_scanners?: string[];
-    fail_on_dependency_scan?: boolean;
-    fail_on_sast_scan?: boolean;
-    fail_on_iac_scan?: boolean;
-    minimum_severity_level?: string;
-};
+import { TScanApiOptions } from '../aikidoApi.js';
 type TScanArguments = {
     repoId: string | number;
     baseCommitId: string;
