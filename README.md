@@ -24,7 +24,7 @@ After installation, you'll need to setup your Aikido API key. You can add your k
 $ aikido-cli apikey <your-api-key-here>
 ```
 
-⚠️ Your Aikido API key is stored in `~/.config/configstore/aikido-cli.json`. If you don't want this behaviour (e.g. for security related issues), you can also provide your API key to `aikido-cli` by adding `--apikey <your-api-key-here>` to every command. However, for the examples below, we'll assume you've used `aikido-cli apikey <your-api-key-here>` to save your API key.
+⚠️ Your Aikido API key is stored in `~/.config/configstore/aikido-cli.json`. If you don't want this behaviour (e.g. for security related issues), you can also provide your API key to `aikido-cli` by adding `--apikey <your-api-key-here>` to every command. However, for the examples below, we'll assume you've used `aikido-cli apikey <your-api-key-here>` to save your API key. If `--apikey` is provided while a key is set in the configuration file on disk, the key that was provided with `--apikey` will be used.
 
 ## Usage
 

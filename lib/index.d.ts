@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
+export declare const program: Command;
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
@@ -8,4 +9,3 @@ declare global {
         }
     }
 }
-export declare const program: Command;

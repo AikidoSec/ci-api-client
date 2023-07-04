@@ -8,16 +8,6 @@ import { fileURLToPath } from 'url';
 import apiKey from './commands/apiKey.js';
 import scan from './commands/scan.js';
 
-// Override global process.env type
-declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      [key: string]: any; // used any here
-      QUIET?: boolean;
-    }
-  }
-}
-
 // Load all .env configuration variables and auto-inject them into process.env
 dotenv.config();
 
@@ -42,12 +32,28 @@ program
 apiKey.cliSetup(program);
 scan.cliSetup(program);
 
-// Add global option "quiet"
+// Override global process.env type
+declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      [key: string]: any; // used any here
+      QUIET?: boolean;
+    }
+  }
+}
+
+// Add global option "--quiet"
 program
   .option('-q, --quiet', 'Disable console output when executing commands')
   .on('option:quiet', function () {
     process.env.QUIET = true;
   });
+
+// Add global option "--apikey"
+program.option(
+  '--apikey <apikey>',
+  'Use a cli apikey instead of reading the key from the configuration'
+);
 
 program.configureOutput({
   outputError: (str, write) => write(chalk.red(str)),
