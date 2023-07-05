@@ -4,7 +4,7 @@ Are you missing functionality or have you found a bug? Please feel free to add a
 
 ## Reporting issues
 
-This package uses the [GitHub issue tracker](https://github.com/AikidoSec/aikido-cli/issues) to track bugs and features. Before submitting a bug report or feature request, check to make sure it hasn't already been submitted.
+This package uses the [GitHub Issue Tracker](https://github.com/AikidoSec/aikido-cli/issues) to track bugs and features. Before submitting a bug report or feature request, check to make sure it hasn't already been submitted.
 
 ## Contributing code
 
@@ -15,33 +15,16 @@ Please try to follow this workflow:
 - Fork the project
 - Create a new branch forked from the master branch with a title for your feature (e.g. feature-that-i-want)
 - Commit all your code into this branch until you are happy with your contribution
-- Document your changes in the **changelog/next-release.md** file ⚠️
-- If possible; try to add unit tests for your contribution
 - Create a pull request with your commits
 
 ## Formatting ⚠️
 
-Please try to follow [PSR-12](https://www.php-fig.org/psr/psr-12/) rules when writing code. A PSR-12 compliant [phpcs.xml](phpcs.xml) is provided, so if your editor supports [phpcs](https://github.com/squizlabs/PHP_CodeSniffer), your editor should automatically warn you if you are deviating from PSR-12 compliant formatting.
-
-You can also check code style manually by running `composer phpcs` in the projects' root folder on your disk.
+Please try to follow editor settings provided in `.editorconfig` and `.prettierrc`. If you are using an editor like VS Code your editor should automatically parse these files and auto-format your files on save. If not, you can re-format all source files with the following command:
 
 ```sh
+$ yarn format
 ```
 
 ## Unit testing ⚠️
 
-### A note on unit testing
-
-Although unit testing is included, this repository does not provide exhaustive unit testing for *all* possibilities the library offers. This is definitely a long-term goal. So please try to add unit tests for new functionality that you add.
-
-### Running the unit tests
-
-To run the complete suite of unit tests
-
-```sh
-```
-
-To run a single unit test
-
-```sh
-```
+No unit tests are currently available for the cli tool.

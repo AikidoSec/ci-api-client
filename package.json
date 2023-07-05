@@ -15,9 +15,9 @@
     "build": "tsc -p .",
     "local": "yarn build && yarn global add file:$PWD; aikido-cli",
     "local-rm": "yarn global remove aikido-cli",
+    "format": "prettier --write 'src/**/*.ts'",
     "//": {
-      "refresh": "rm -rf ./node_modules ./package-lock.json && npm install",
-      "create": "npm run build && npm run test"
+      "refresh": "rm -rf ./node_modules ./yarn.lock && yarn"
     }
   },
   "dependencies": {
