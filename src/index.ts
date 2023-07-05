@@ -7,14 +7,17 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import apiKey from './commands/apiKey.js';
 import scan from './commands/scan.js';
-
-// Load all .env configuration variables and auto-inject them into process.env
-dotenv.config();
+import upload from './commands/upload.js';
 
 // Determine current file location and path to
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const __rootdirname = dirname(__dirname);
+
+// Load all .env configuration variables and auto-inject them into process.env
+dotenv.config(
+  process.env.NODE_ENV ? { path: `.env.${process.env.NODE_ENV}` } : {}
+);
 
 // Set commander instance info from package.json
 const pkgJsonPath = join('/', __rootdirname, 'package.json');

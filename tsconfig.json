@@ -16,9 +16,12 @@
     /* Skip type checking of declaration files. */
     "skipLibCheck": true,
 
+    /* Remove comments in target files */
+    "removeComments": true,
+
     /* Disallow inconsistently-cased references to the same file. */
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/*.ts", "src/**/*.ts"],
+  "include": [".env", ".env.*", "src/*.ts", "src/**/*.ts"],
   "exclude": ["lib", "dist", "node_modules"]
 }

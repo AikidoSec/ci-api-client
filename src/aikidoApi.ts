@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { getApiKey } from './configuration.js';
 
+const getApiUrl = () => process.env.AIKIDO_API || 'https://app.aikido.dev';
 const getApiHeaders = () => ({ 'X-AIK-API-SECRET': getApiKey() });
 
 // #region Scan start
@@ -31,7 +32,7 @@ export async function startScan(
 ): Promise<TStartScanResult> {
   return (
     await axios(
-      `${process.env.AIKIDO_API}/api/integrations/continuous_integration/scan/repository`,
+      `${getApiUrl()}/api/integrations/continuous_integration/scan/repository`,
       {
         method: 'POST',
         data,
@@ -85,7 +86,7 @@ export async function pollScanStatus(
 > {
   return (
     await axios(
-      `${process.env.AIKIDO_API}/api/integrations/continuous_integration/scan/repository`,
+      `${getApiUrl()}/api/integrations/continuous_integration/scan/repository`,
       {
         method: 'GET',
         params: { scan_id: scanId },
@@ -118,7 +119,7 @@ export async function uploadCustomScanResult(
   data: TUploadApiOptions
 ): Promise<TUploadResult> {
   console.log(
-    `${process.env.AIKIDO_API}/api/integrations/continuous_integration/scan/custom`
+    `${getApiUrl()}/api/integrations/continuous_integration/scan/custom`
   );
   return (
     await axios.post(
