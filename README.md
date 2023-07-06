@@ -32,7 +32,13 @@ Using the `aikido-cli` to start new scans is very straightforward.
 
 ```sh
 $ aikido-cli scan <repository_id> <base_commit_id> <head_commit_id>
+```
 
+The process will report scan progress and will exit with exitCode `0` if the scan was successfull (`gate_passed: true`). The process will exit with exitCode `10` if the scan was unsuccesfull (`gate_passed: false`). If anything else goes wrong (e.g. API unavailable, scanning unavailable, other unexpected issue) the process will exit with exitCode `1`.
+
+If you want the scan to run quietly (without output), you can add the `--quiet` option to the command.
+
+```sh
 # For more options and combinations, check the help output
 $ aikido-cli help scan
 ```
