@@ -50,10 +50,6 @@ async function cli(options: TUploadUserCliOptions, command: string) {
   // Process command options and group them into apiOptions hash
   const { apiOptions, cliOptions } = await parseCliOptions(options);
 
-  console.log('options', options);
-  console.log('apiOptions', apiOptions);
-  console.log('cliOptions', cliOptions);
-
   let loader: Ora | null = startSpinner('Uploading custom scan');
 
   const onUploadComplete = (result: TUploadResult) => {

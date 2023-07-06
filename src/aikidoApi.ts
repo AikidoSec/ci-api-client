@@ -118,12 +118,9 @@ export type TUploadResult = {
 export async function uploadCustomScanResult(
   data: TUploadApiOptions
 ): Promise<TUploadResult> {
-  console.log(
-    `${getApiUrl()}/api/integrations/continuous_integration/scan/custom`
-  );
   return (
     await axios.post(
-      `${process.env.AIKIDO_API}/api/integrations/continuous_integration/scan/custom`,
+      `${getApiUrl()}/api/integrations/continuous_integration/scan/custom`,
       {
         data,
         headers: getApiHeaders(),
