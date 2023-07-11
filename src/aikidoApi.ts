@@ -2,7 +2,10 @@ import axios from 'axios';
 import { getApiKey } from './configuration.js';
 
 const getApiUrl = () => process.env.AIKIDO_API || 'https://app.aikido.dev';
-const getApiHeaders = () => ({ 'X-AIK-API-SECRET': getApiKey() });
+const getApiHeaders = () => ({
+  'Content-Type': 'application/json',
+  'X-AIK-API-SECRET': getApiKey(),
+});
 
 // #region Scan start
 export type TScanApiOptions = {

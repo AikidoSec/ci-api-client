@@ -13,7 +13,7 @@ If you want to add additional tags, attributes or functionality to the library, 
 Please try to follow this workflow:
 
 - Fork the project
-- Create a new branch forked from the master branch with a title for your feature (e.g. feature-that-i-want)
+- Create a new branch forked from the main branch with a title for your feature (e.g. feature-that-i-want)
 - Commit all your code into this branch until you are happy with your contribution
 - Create a pull request with your commits
 
