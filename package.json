@@ -1,20 +1,20 @@
 {
-  "name": "aikido-cli",
-  "version": "1.0.0",
-  "description": "CLI tool to easily integrate the Aikido public CI API into custom deploy scripts",
+  "name": "aikido-api-client",
+  "version": "1.0.5",
+  "description": "CLI api client to easily integrate the Aikido public CI API into custom deploy scripts",
   "license": "MIT",
   "author": "Bert Devriese <bert@builtinbruges.com>",
   "private": false,
   "type": "module",
   "main": "lib/index.js",
   "bin": {
-    "aikido-cli": "./lib/index.js"
+    "aikido-api-client": "./lib/index.js"
   },
   "scripts": {
     "start": "nodemon --watch 'src/**/*.ts' --esm --exec 'ts-node' src/index.ts",
     "build": "tsc -p .",
-    "local": "yarn build && yarn global add file:$PWD; aikido-cli",
-    "local-rm": "yarn global remove aikido-cli",
+    "local": "yarn build && yarn global add file:$PWD; aikido-api-client",
+    "local-rm": "yarn global remove aikido-api-client",
     "format": "prettier --write 'src/**/*.ts'",
     "//": {
       "refresh": "rm -rf ./node_modules ./yarn.lock && yarn"

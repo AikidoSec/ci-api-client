@@ -20,7 +20,7 @@ export const outputError = (message: string, exitCode: number = 1): void => {
 export const outputHttpError = (axiosError: AxiosError): void => {
   if (axiosError.code === 'ECONNREFUSED') {
     outputError(
-      'Could not connect to Aikido API. Please verify your network settings'
+      `Could not connect to Aikido API (${axiosError.message}). Please verify your network settings`
     );
   } else if (
     axiosError.response?.status &&

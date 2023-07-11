@@ -1,14 +1,14 @@
-# Contributing to aikido-cli
+# Contributing to aikido-api-client
 
 Are you missing functionality or have you found a bug? Please feel free to add an issue or submit a PR. We try to be responsive and release updates and fixes as fast as possible.
 
 ## Reporting issues
 
-This package uses the [GitHub Issue Tracker](https://github.com/AikidoSec/aikido-cli/issues) to track bugs and features. Before submitting a bug report or feature request, check to make sure it hasn't already been submitted.
+This package uses the [GitHub Issue Tracker](https://github.com/AikidoSec/aikido-api-client/issues) to track bugs and features. Before submitting a bug report or feature request, check to make sure it hasn't already been submitted.
 
 ## Contributing code
 
-If you want to add additional tags, attributes or functionality to the library, please feel free to create a [pull request](https://github.com/AikidoSec/aikido-cli/pulls) with your changes.
+If you want to add additional tags, attributes or functionality to the library, please feel free to create a [pull request](https://github.com/AikidoSec/aikido-api-client/pulls) with your changes.
 
 Please try to follow this workflow:
 
