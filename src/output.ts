@@ -24,6 +24,13 @@ export const outputHttpError = (axiosError: AxiosError): void => {
     );
   } else if (
     axiosError.response?.status &&
+    axiosError.response?.status === 401
+  ) {
+    outputError(
+      'Request failed. The provided api key is most likely no longer valid and has been rotated or revoked. Visit https://app.aikido.dev/settings/integrations/continuous-integration to generate a new key.'
+    );
+  } else if (
+    axiosError.response?.status &&
     axiosError.response?.status === 403
   ) {
     outputError(

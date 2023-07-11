@@ -9,6 +9,7 @@ import {
 } from '../output.js';
 import chalk from 'chalk';
 import { Ora } from 'ora';
+import { pkgJson } from '../index.js';
 
 type TScanArguments = {
   repoId: string | number;
@@ -137,7 +138,7 @@ export const scan = async ({
   baseCommitId,
   headCommitId,
   branchName,
-  options = {},
+  options,
   pollInterval = 5,
   onStart,
   onStartComplete,
@@ -198,7 +199,9 @@ export const scan = async ({
 };
 
 const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
-  const apiOptions: TScanApiOptions = {};
+  // Version provided to the API corresponds with the version in package.json
+  // of the cli client
+  const apiOptions: TScanApiOptions = { version: pkgJson.version };
   const cliOptions: TScanCliOptions = { pollInterval: 5 };
 
   if (userCliOptions.pullRequestTitle) {

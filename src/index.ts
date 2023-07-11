@@ -21,7 +21,7 @@ dotenv.config(
 
 // Set commander instance info from package.json
 const pkgJsonPath = join('/', __rootdirname, 'package.json');
-const pkgJson = JSON.parse(readFileSync(pkgJsonPath, 'utf8'));
+export const pkgJson = JSON.parse(readFileSync(pkgJsonPath, 'utf8'));
 
 // Start up commander.js Command instance
 export const program = new Command();

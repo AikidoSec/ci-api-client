@@ -12,6 +12,7 @@ export type TScanApiOptions = {
     fail_on_sast_scan?: boolean;
     fail_on_iac_scan?: boolean;
     minimum_severity_level?: string;
+    version: string;
 };
 type TStartScanResult = {
     scan_id: number;
