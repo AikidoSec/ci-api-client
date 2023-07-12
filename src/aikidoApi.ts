@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getApiKey } from './configuration.js';
+import { outputDebug } from './output.js';
 
 const getApiUrl = () => process.env.AIKIDO_API || 'https://app.aikido.dev';
 const getApiHeaders = () => ({
@@ -21,11 +22,11 @@ export type TScanApiOptions = {
   fail_on_dependency_scan?: boolean;
   fail_on_sast_scan?: boolean;
   fail_on_iac_scan?: boolean;
-  minimum_severity_level?: string;
+  minimum_severity?: string;
   version: string;
 };
 
-type TStartScanResult = {
+export type TStartScanResult = {
   scan_id: number;
 };
 
@@ -34,21 +35,25 @@ type TStartScanResult = {
 export async function startScan(
   data: TScanApiOptions
 ): Promise<TStartScanResult> {
-  return (
-    await axios(
-      `${getApiUrl()}/api/integrations/continuous_integration/scan/repository`,
-      {
-        method: 'POST',
-        data,
-        headers: getApiHeaders(),
-      }
-    )
-  ).data;
+  const requestUrl = `${getApiUrl()}/api/integrations/continuous_integration/scan/repository`;
+  const requestConfig = {
+    method: 'POST',
+    data,
+    headers: getApiHeaders(),
+  };
+
+  outputDebug(`API request: ${requestUrl}`);
+  outputDebug(requestConfig);
+
+  const resultData = (await axios(requestUrl, requestConfig)).data;
+  outputDebug(resultData);
+
+  return resultData;
 }
 // #endregion
 
 // #region Scan polling
-type TPollIsScanningResult = {
+export type TPollIsScanningResult = {
   all_scans_completed: boolean;
   dependency_scan_completed: boolean;
   sast_scan_completed: boolean;
@@ -73,11 +78,11 @@ type TPollScanDefaultBranchCompletedOptions = {
   issue_links: string[];
 };
 
-type TPollScanFeatureBranchCompletedResult = TPollIsScanningResult &
+export type TPollScanFeatureBranchCompletedResult = TPollIsScanningResult &
   TPollScanCompletedOptions &
   TPollScanFeatureBranchCompletedOptions;
 
-type TPollScanCompletedDefaultBranchResult = TPollIsScanningResult &
+export type TPollScanCompletedDefaultBranchResult = TPollIsScanningResult &
   TPollScanCompletedOptions &
   TPollScanDefaultBranchCompletedOptions;
 
@@ -88,16 +93,20 @@ export async function pollScanStatus(
   | TPollScanFeatureBranchCompletedResult
   | TPollScanCompletedDefaultBranchResult
 > {
-  return (
-    await axios(
-      `${getApiUrl()}/api/integrations/continuous_integration/scan/repository`,
-      {
-        method: 'GET',
-        params: { scan_id: scanId },
-        headers: getApiHeaders(),
-      }
-    )
-  ).data;
+  const requestUrl = `${getApiUrl()}/api/integrations/continuous_integration/scan/repository`;
+  const requestConfig = {
+    method: 'GET',
+    params: { scan_id: scanId },
+    headers: getApiHeaders(),
+  };
+
+  outputDebug(`API request: ${requestUrl}`);
+  outputDebug(requestConfig);
+
+  const resultData = (await axios(requestUrl, requestConfig)).data;
+  outputDebug(resultData);
+
+  return resultData;
 }
 // #endregion
 
@@ -122,13 +131,18 @@ export type TUploadResult = {
 export async function uploadCustomScanResult(
   data: TUploadApiOptions
 ): Promise<TUploadResult> {
-  return (
-    await axios.post(
-      `${getApiUrl()}/api/integrations/continuous_integration/scan/custom`,
-      {
-        data,
-        headers: getApiHeaders(),
-      }
-    )
-  ).data;
+  const requestUrl = `${getApiUrl()}/api/integrations/continuous_integration/scan/custom`;
+  const requestConfig = {
+    method: 'POST',
+    data,
+    headers: getApiHeaders(),
+  };
+
+  outputDebug(`API request: ${requestUrl}`);
+  outputDebug(requestConfig);
+
+  const resultData = (await axios(requestUrl, requestConfig)).data;
+  outputDebug(resultData);
+
+  return resultData;
 }

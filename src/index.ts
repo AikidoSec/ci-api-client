@@ -42,6 +42,7 @@ declare global {
     interface ProcessEnv {
       [key: string]: any; // used any here
       QUIET?: boolean;
+      CLI_DEBUG?: boolean | string;
     }
   }
 }
@@ -51,6 +52,13 @@ program
   .option('-q, --quiet', 'Disable console output when executing commands')
   .on('option:quiet', function () {
     process.env.QUIET = true;
+  });
+
+// Add global option "--debug"
+program
+  .option('--debug', 'Add additional debug information to command output')
+  .on('option:debug', function () {
+    process.env.CLI_DEBUG = true;
   });
 
 // Add global option "--apikey"

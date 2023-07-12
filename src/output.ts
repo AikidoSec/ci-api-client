@@ -1,11 +1,23 @@
 import ora, { Ora } from 'ora';
 import { program } from './index.js';
 import { AxiosError } from 'axios';
+import chalk from 'chalk';
 
 // Output a console message
 export const outputLog = (message: string): void => {
   if (!process.env.QUIET) {
     console.log(message);
+  }
+};
+
+// Output some message, var, .. if --debug was provided
+export const outputDebug = (variable: any): void => {
+  if (process.env.CLI_DEBUG == true || process.env.CLI_DEBUG == 'true') {
+    console.log(
+      chalk.blue(
+        typeof variable == 'object' ? JSON.stringify(variable) : variable
+      )
+    );
   }
 };
 
@@ -43,8 +55,18 @@ export const outputHttpError = (axiosError: AxiosError): void => {
     outputError('Something went wrong contacting the Aikido API.');
   }
 
+  const statusStr = axiosError.response?.status
+    ? ` (${axiosError.response?.status})`
+    : '';
+
+  if (axiosError.response) {
+    outputDebug(axiosError.response?.status);
+    outputDebug(axiosError.response?.headers);
+    outputDebug(axiosError.response?.data);
+  }
+
   outputError(
-    'Something unexpected went wrong. Please contact devsupport@aikido.dev if this problem persists...'
+    `Something unexpected went wrong${statusStr}... Please contact devsupport@aikido.dev if this problem persists.`
   );
 };
 

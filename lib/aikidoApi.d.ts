@@ -11,14 +11,14 @@ export type TScanApiOptions = {
     fail_on_dependency_scan?: boolean;
     fail_on_sast_scan?: boolean;
     fail_on_iac_scan?: boolean;
-    minimum_severity_level?: string;
+    minimum_severity?: string;
     version: string;
 };
-type TStartScanResult = {
+export type TStartScanResult = {
     scan_id: number;
 };
 export declare function startScan(data: TScanApiOptions): Promise<TStartScanResult>;
-type TPollIsScanningResult = {
+export type TPollIsScanningResult = {
     all_scans_completed: boolean;
     dependency_scan_completed: boolean;
     sast_scan_completed: boolean;
@@ -39,8 +39,8 @@ type TPollScanDefaultBranchCompletedOptions = {
     open_issues_found: number;
     issue_links: string[];
 };
-type TPollScanFeatureBranchCompletedResult = TPollIsScanningResult & TPollScanCompletedOptions & TPollScanFeatureBranchCompletedOptions;
-type TPollScanCompletedDefaultBranchResult = TPollIsScanningResult & TPollScanCompletedOptions & TPollScanDefaultBranchCompletedOptions;
+export type TPollScanFeatureBranchCompletedResult = TPollIsScanningResult & TPollScanCompletedOptions & TPollScanFeatureBranchCompletedOptions;
+export type TPollScanCompletedDefaultBranchResult = TPollIsScanningResult & TPollScanCompletedOptions & TPollScanDefaultBranchCompletedOptions;
 export declare function pollScanStatus(scanId: number): Promise<TPollIsScanningResult | TPollScanFeatureBranchCompletedResult | TPollScanCompletedDefaultBranchResult>;
 export declare enum TUploadPayloadType {
     Checkov = "checkov",

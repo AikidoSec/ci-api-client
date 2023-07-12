@@ -1,5 +1,13 @@
 import { Argument, Command, InvalidArgumentError, Option } from 'commander';
-import { TScanApiOptions, pollScanStatus, startScan } from '../aikidoApi.js';
+import {
+  TStartScanResult,
+  TPollIsScanningResult,
+  TPollScanCompletedDefaultBranchResult,
+  TPollScanFeatureBranchCompletedResult,
+  TScanApiOptions,
+  pollScanStatus,
+  startScan,
+} from '../aikidoApi.js';
 import { getApiKey } from '../configuration.js';
 import {
   outputError,
@@ -21,8 +29,24 @@ type TScanArguments = {
   onStart?: () => void | null;
   onStartComplete?: (startResult: any) => void | null;
   onStartFail?: (error: any) => void | null;
-  onScanStart?: (startResult: any) => void | null;
-  onScanComplete?: (startResult: any) => void | null;
+  onScanStart?: (
+    startResult:
+      | TPollIsScanningResult
+      | TPollScanFeatureBranchCompletedResult
+      | TPollScanCompletedDefaultBranchResult
+  ) => void | null;
+  onNextPoll?: (
+    pollResult:
+      | TPollIsScanningResult
+      | TPollScanFeatureBranchCompletedResult
+      | TPollScanCompletedDefaultBranchResult
+  ) => void | null;
+  onScanComplete?: (
+    pollResult:
+      | TPollIsScanningResult
+      | TPollScanFeatureBranchCompletedResult
+      | TPollScanCompletedDefaultBranchResult
+  ) => void | null;
   onScanFail?: (error: any) => void | null;
 };
 
@@ -59,14 +83,25 @@ async function cli(
   const { apiOptions, cliOptions } = parseCliOptions(options);
 
   let loader: Ora | null;
+  let pollCount: number = 1;
 
   // Setup different scan() event handlers
   const onStart = () => {
-    loader = startSpinner('Starting scan');
+    loader = startSpinner('Starting Aikido Security scan');
   };
 
-  const onStartComplete = () => {
-    loader?.succeed('Scan started');
+  const onStartComplete = (startResult: TStartScanResult) => {
+    loader?.succeed(
+      `Aikido Security scan started (id: ${startResult.scan_id})`
+    );
+  };
+
+  const onNextPoll = () => {
+    if (loader) {
+      loader.text = `Polling for Aikido Security scan to complete (${pollCount})`;
+    }
+
+    pollCount += 1;
   };
 
   const onScanStart = () => {
@@ -86,6 +121,7 @@ async function cli(
           )
         );
       }
+
       if (pollResult.issue_links) {
         outputLog(
           chalk.gray(
@@ -95,6 +131,7 @@ async function cli(
           )
         );
       }
+
       if (pollResult.diff_url) {
         outputLog(chalk.gray(`* Diff url: ${pollResult.diff_url}`));
       }
@@ -127,6 +164,7 @@ async function cli(
     onStart,
     onStartComplete,
     onStartFail: onFail,
+    onNextPoll,
     onScanStart,
     onScanComplete,
     onScanFail: onFail,
@@ -144,10 +182,12 @@ export const scan = async ({
   onStartComplete,
   onStartFail,
   onScanStart,
+  onNextPoll,
   onScanComplete,
   onScanFail,
 }: TScanArguments): Promise<void> => {
   onStart?.();
+
   let result: any | null = null;
 
   // Initialize a scan and call onStartComplete, onStartFail
@@ -185,6 +225,7 @@ export const scan = async ({
       // Note that onScanComplete can return a successfull or
       // unsuccessfull scan result
       if (pollResult.all_scans_completed === false) {
+        onNextPoll?.(pollResult);
         setTimeout(pollStatus, pollInterval * 1000);
       } else {
         onScanComplete?.(pollResult);
@@ -229,7 +270,7 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
     apiOptions.fail_on_iac_scan = userCliOptions.failOnIacScan;
   }
   if (userCliOptions.minimumSeverityLevel) {
-    apiOptions.minimum_severity_level = userCliOptions.minimumSeverityLevel;
+    apiOptions.minimum_severity = userCliOptions.minimumSeverityLevel;
   }
   if (
     userCliOptions.pollInterval &&

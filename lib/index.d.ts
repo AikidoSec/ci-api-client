@@ -7,6 +7,7 @@ declare global {
         interface ProcessEnv {
             [key: string]: any;
             QUIET?: boolean;
+            CLI_DEBUG?: boolean | string;
         }
     }
 }
