@@ -2,34 +2,24 @@
 import chalk from 'chalk';
 import { Command } from 'commander';
 import dotenv from 'dotenv';
-import { readFileSync } from 'fs';
-import { dirname, join } from 'path';
-import { fileURLToPath } from 'url';
 import apiKey from './commands/apiKey.js';
 import scan from './commands/scan.js';
 import upload from './commands/upload.js';
-
-// Determine current file location and path to
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const __rootdirname = dirname(__dirname);
 
 // Load all .env configuration variables and auto-inject them into process.env
 dotenv.config(
   process.env.NODE_ENV ? { path: `.env.${process.env.NODE_ENV}` } : {}
 );
 
-// Set commander instance info from package.json
-const pkgJsonPath = join('/', __rootdirname, 'package.json');
-export const pkgJson = JSON.parse(readFileSync(pkgJsonPath, 'utf8'));
-
 // Start up commander.js Command instance
 export const program = new Command();
 
 program
-  .name(pkgJson.name)
-  .description(pkgJson.description)
-  .version(pkgJson.version);
+  .name('Aikido API Client')
+  .description(
+    'CLI api client to easily integrate the Aikido public CI API into custom deploy scripts'
+  )
+  .version('1.0.1');
 
 // Load in all app commands and set them up in the `program` instance
 apiKey.cliSetup(program);
