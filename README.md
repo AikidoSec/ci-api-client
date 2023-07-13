@@ -12,10 +12,10 @@ The quickest way to get started is to install the cli tool as a global package.
 
 ```sh
 # npm users
-$ npm install -g aikido-api-client
+$ npm install -g @aikidosec/ci-api-client
 
 # yarn users
-$ yarn global add aikido-api-client
+$ yarn global add @aikidosec/ci-api-client
 ```
 
 After installation, you'll need to setup your Aikido API key. You can add your key by requesting a token on the [Continuous Integrations page](https://app.aikido.dev/settings/integrations/continuous-integration) in the [Integrations](https://app.aikido.dev/settings/integrations) section of the Aikido web platform. Click the "Start integrating" link and setup your key globally by executing
