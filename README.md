@@ -28,6 +28,10 @@ $ aikido-api-client apikey <your-api-key-here>
 
 ## Usage
 
+### Scanning
+
+#### Basics
+
 Using the `aikido-api-client` to start new scans is very straightforward.
 
 ```sh
@@ -36,20 +40,29 @@ $ aikido-api-client scan <repository_id> <base_commit_id> <head_commit_id>
 
 The process will report scan progress and will exit with exitCode `0` if the scan was successfull (`gate_passed: true`). The process will exit with exitCode `10` if the scan was unsuccesfull (`gate_passed: false`). If anything else goes wrong (e.g. API unavailable, scanning unavailable, other unexpected issue) the process will exit with exitCode `1`. If polling from the Aikido API timeouts, the api-client will return exitCode `5`.
 
-If you want the scan to run quietly (without output), you can add the `--quiet` option to the command.
+#### Quiet mode
+
+If you want the scan to run without output, you can add the `--quiet` option to the command. You can use the exitcode of the command to determine the scan result.
 
 ```sh
+# For more options and combinations, check the help output
+$ aikido-api-client scan <repository_id> <base_commit_id> <head_commit_id> --quiet
+```
+
+#### Poll interval and timeout
+
+If no valid response is returned when polling, the api-client will automatically timeout after 300 seconds. The api-client will poll for changes every 5 seconds. You can override these settings by adding `--poll-interval` and `--timeout` to the command, e.g.:
+
+```sh
+$ aikido-api-client scan <repository_id> <base_commit_id> <head_commit_id> --poll-interval 10 --timeout 120
+
 # For more options and combinations, check the help output
 $ aikido-api-client help scan
 ```
 
-If no valid response is returned, the api-client will automatically timeout after 300 seconds. The api-client will poll for changes every 5 seconds. You can override these settings by adding `--poll-interval` and `--timeout` to the command, e.g.:
+### Upload custom scan results
 
-```sh
-$ aikido-api-client scan <repository_id> <base_commit_id> <head_commit_id> --poll-interval 10 --timeout 120
-```
-
-Uploading custom test results:
+Uploading custom test results can be done with the `upload` command.
 
 ```sh
 $ aikido-api-client upload --repository-id <repository_id> --type checkov --file <path_to_payload_file>
