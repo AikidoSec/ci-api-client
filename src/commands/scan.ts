@@ -1,10 +1,12 @@
+import chalk from 'chalk';
 import { Argument, Command, InvalidArgumentError, Option } from 'commander';
+import { Ora } from 'ora';
 import {
-  TStartScanResult,
   TPollIsScanningResult,
   TPollScanCompletedDefaultBranchResult,
   TPollScanFeatureBranchCompletedResult,
   TScanApiOptions,
+  TStartScanResult,
   pollScanStatus,
   startScan,
 } from '../aikidoApi.js';
@@ -15,9 +17,6 @@ import {
   outputLog,
   startSpinner,
 } from '../output.js';
-import chalk from 'chalk';
-import { Ora } from 'ora';
-import { pkgJson } from '../index.js';
 
 type TScanArguments = {
   repoId: string | number;
