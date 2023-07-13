@@ -24,7 +24,8 @@ type TScanArguments = {
   headCommitId: string;
   branchName: string;
   options: TScanApiOptions;
-  pollInterval: number;
+  pollInterval?: number;
+  timeout?: number;
   onStart?: () => void | null;
   onStartComplete?: (startResult: any) => void | null;
   onStartFail?: (error: any) => void | null;
@@ -46,11 +47,13 @@ type TScanArguments = {
       | TPollScanFeatureBranchCompletedResult
       | TPollScanCompletedDefaultBranchResult
   ) => void | null;
+  onScanTimeout?: () => void | null;
   onScanFail?: (error: any) => void | null;
 };
 
 type TScanCliOptions = {
   pollInterval: number;
+  timeout: number;
 };
 
 type TScanUserCliOptions = {
@@ -62,6 +65,7 @@ type TScanUserCliOptions = {
   failOnIacScan?: boolean;
   minimumSeverityLevel?: string;
   pollInterval?: number;
+  timeout?: number;
 };
 
 async function cli(
@@ -90,6 +94,7 @@ async function cli(
   };
 
   const onStartComplete = (startResult: TStartScanResult) => {
+    // Get the scan start as unix timestamp
     loader?.succeed(
       `Aikido Security scan started (id: ${startResult.scan_id})`
     );
@@ -139,12 +144,18 @@ async function cli(
     }
   };
 
+  const onScanTimeout = () => {
+    // Output timeout message and exit with error code 5
+    loader?.fail(`Sorry, your scan timed out (${cliOptions.timeout}s)...`);
+    process.exit(5);
+  };
+
   const onFail = (error: any) => {
     loader?.fail();
 
     if (error.response?.status && error.response?.status === 404) {
       outputError(
-        'Please verify your repoId, baseCommitId, headCommitId and branchName'
+        'Please verify your repoId, baseCommitId, headCommitId and branchName. Did you add your repo to Aikido?'
       );
     } else {
       outputHttpError(error);
@@ -160,12 +171,14 @@ async function cli(
     branchName,
     options: apiOptions,
     pollInterval: cliOptions.pollInterval,
+    timeout: cliOptions.timeout,
     onStart,
     onStartComplete,
     onStartFail: onFail,
     onNextPoll,
     onScanStart,
     onScanComplete,
+    onScanTimeout,
     onScanFail: onFail,
   });
 }
@@ -177,12 +190,14 @@ export const scan = async ({
   branchName,
   options,
   pollInterval = 5,
+  timeout = 180,
   onStart,
   onStartComplete,
   onStartFail,
   onScanStart,
   onNextPoll,
   onScanComplete,
+  onScanTimeout,
   onScanFail,
 }: TScanArguments): Promise<void> => {
   onStart?.();
@@ -214,6 +229,9 @@ export const scan = async ({
   onScanStart?.(result);
   let pollResult;
 
+  // Save scan start unix timestamp
+  const scanStartTimestamp = Date.now() / 1000;
+
   // Poll status with a setTimeout
   const pollStatus = async () => {
     try {
@@ -224,12 +242,19 @@ export const scan = async ({
       // Note that onScanComplete can return a successfull or
       // unsuccessfull scan result
       if (pollResult.all_scans_completed === false) {
-        onNextPoll?.(pollResult);
-        setTimeout(pollStatus, pollInterval * 1000);
+        const totalScanTime = Date.now() / 1000 - scanStartTimestamp;
+
+        if (totalScanTime > timeout) {
+          onScanTimeout?.();
+        } else {
+          onNextPoll?.(pollResult);
+          setTimeout(pollStatus, pollInterval * 1000);
+        }
       } else {
         onScanComplete?.(pollResult);
       }
     } catch (error) {
+      console.log(error);
       onScanFail?.(error);
     }
   };
@@ -242,7 +267,7 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   // Version provided to the API corresponds with the version in package.json
   // of the cli client
   const apiOptions: TScanApiOptions = { version: '1.0.5' };
-  const cliOptions: TScanCliOptions = { pollInterval: 5 };
+  const cliOptions: TScanCliOptions = { pollInterval: 5, timeout: 300 };
 
   if (userCliOptions.pullRequestTitle) {
     apiOptions.pull_request_metadata = {
@@ -278,6 +303,14 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
     outputError('Please provide a valid poll interval');
   } else if (userCliOptions.pollInterval) {
     cliOptions.pollInterval = userCliOptions.pollInterval;
+  }
+  if (
+    userCliOptions.timeout &&
+    (isNaN(userCliOptions.timeout) || userCliOptions.timeout <= 0)
+  ) {
+    outputError('Please provide a valid timeout');
+  } else if (userCliOptions.timeout) {
+    cliOptions.timeout = userCliOptions.timeout;
   }
 
   return { apiOptions, cliOptions };
@@ -362,6 +395,14 @@ export const cliSetup = (program: Command) =>
         'The poll interval when checking for an updated scan result'
       )
         .preset(5)
+        .argParser(parseFloat)
+    )
+    .addOption(
+      new Option(
+        '--timeout [interval]',
+        'Define the timeout after which the client should stop polling if no result was returned.'
+      )
+        .preset(300)
         .argParser(parseFloat)
     )
     .description('Run a scan of an Aikido repo.')
