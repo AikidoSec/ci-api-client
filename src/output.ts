@@ -66,7 +66,7 @@ export const outputHttpError = (axiosError: AxiosError): void => {
   }
 
   outputError(
-    `Something unexpected went wrong${statusStr}... Please contact devsupport@aikido.dev if this problem persists.`
+    `Something unexpected went wrong${statusStr}... Please contact us if this problem persists.`
   );
 };
 
