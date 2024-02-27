@@ -38,6 +38,8 @@ The process will report scan progress and will exit with exitCode `0` if the sca
 
 If you want the scan to run quietly (without output), you can add the `--quiet` option to the command.
 
+Please not that the repository_id which you need to provide to the CLI is the unique ID of the scm provider you are using, not the ID of the repository in Aikido.
+
 ```sh
 # For more options and combinations, check the help output
 $ aikido-api-client help scan
