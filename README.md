@@ -38,6 +38,8 @@ The process will report scan progress and will exit with exitCode `0` if the sca
 
 If you want the scan to run quietly (without output), you can add the `--quiet` option to the command.
 
+Please note that the repository_id which you need to provide to the CLI is the unique ID of the Git provider you are using, not the ID of the repository in Aikido. You can also find this ID in Aikido, by going to the repository's detail page and clicking on the Git provider's icon in the header.
+
 ```sh
 # For more options and combinations, check the help output
 $ aikido-api-client help scan

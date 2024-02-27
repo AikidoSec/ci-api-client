@@ -2,8 +2,11 @@ import { Argument, Command } from 'commander';
 import { setApiKey } from '../configuration.js';
 import { outputError, outputLog } from '../output.js';
 
+const API_KEY_REGEX = /^AIK_CI_[a-zA-Z0-9]{64}$/g;
+
 function cli(apiKey: string): void {
-  if (apiKey && apiKey.trim().length != 128) {
+  const isValidApiKey = API_KEY_REGEX.test(apiKey) || apiKey.trim().length === 128;
+  if (apiKey && !isValidApiKey) {
     outputError('That does not seem right, please verify your api key');
   }
 
