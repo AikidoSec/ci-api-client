@@ -110,6 +110,9 @@ async function cli(
   const onScanComplete = (pollResult: any) => {
     if (pollResult.gate_passed === true) {
       loader?.succeed('Scan completed, no new issues found');
+      if (pollResult.diff_url) {
+        outputLog(chalk.gray(`* Diff url: ${pollResult.diff_url}`));
+      }
     } else {
       loader?.fail('Scan completed with issues');
 
