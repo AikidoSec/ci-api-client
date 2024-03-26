@@ -30,44 +30,54 @@ export const outputError = (message: string, exitCode: number = 1): void => {
 };
 
 export const outputHttpError = (axiosError: AxiosError): void => {
-  if (axiosError.code === 'ECONNREFUSED') {
-    outputError(
-      `Could not connect to Aikido API (${axiosError.message}). Please verify your network settings`
+  if (axiosError.isAxiosError) {
+    if (axiosError.code === 'ECONNREFUSED') {
+      outputError(
+        `Could not connect to Aikido API (${axiosError.message}). Please verify your network settings.`
+      );
+    } else if (axiosError.response) {
+      // The request was made and the server responded with a status code
+      outputDebug(axiosError.response.status);
+      outputDebug(axiosError.response.headers);
+      outputDebug(axiosError.response.data);
+
+      const statusStr = `${axiosError.response.status} ${axiosError.response.statusText}`;
+      switch (axiosError.response.status) {
+        case 401:
+          return outputError(
+            `${statusStr}: The provided api key is most likely no longer valid and has been rotated or revoked. Visit https://app.aikido.dev/settings/integrations/continuous-integration to generate a new key.`
+          );
+        case 403:
+          return outputError(
+            `${statusStr}: Could not authenticate with the Aikido API. Please verify your Aikdio API key.`
+          );
+        case 500:
+          return outputError(
+            `${statusStr}: Something went wrong contacting the Aikido API. Please try again later.`
+          );
+        default:
+          return outputError(
+            `${statusStr}: ${
+              axiosError.response.data ?? ''
+            } Please contact us if this problem persists.`
+          );
+      }
+      // The request was made but no response was received
+    } else if (axiosError.request) {
+      return outputError(
+        'No response received from the server. Please try again later.'
+      );
+    } else if (axiosError.code === 'ECONNREFUSED') {
+      return outputError(
+        `Could not connect to Aikido API (${axiosError.message}). Please verify your network settings.`
+      );
+    }
+
+    outputDebug(axiosError);
+    return outputError(
+      `Error: (${axiosError.message}). Please contact us if this problem persists.`
     );
-  } else if (
-    axiosError.response?.status &&
-    axiosError.response?.status === 401
-  ) {
-    outputError(
-      'Request failed. The provided api key is most likely no longer valid and has been rotated or revoked. Visit https://app.aikido.dev/settings/integrations/continuous-integration to generate a new key.'
-    );
-  } else if (
-    axiosError.response?.status &&
-    axiosError.response?.status === 403
-  ) {
-    outputError(
-      'Could not authenticate with the Aikido API. Please verify your Aikdio API key.'
-    );
-  } else if (
-    axiosError.response?.status &&
-    axiosError.response?.status === 500
-  ) {
-    outputError('Something went wrong contacting the Aikido API.');
   }
-
-  const statusStr = axiosError.response?.status
-    ? ` (${axiosError.response?.status})`
-    : '';
-
-  if (axiosError.response) {
-    outputDebug(axiosError.response?.status);
-    outputDebug(axiosError.response?.headers);
-    outputDebug(axiosError.response?.data);
-  }
-
-  outputError(
-    `Something unexpected went wrong${statusStr}... Please contact us if this problem persists.`
-  );
 };
 
 // Start a new spinner
