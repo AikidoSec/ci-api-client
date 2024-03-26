@@ -30,9 +30,11 @@ export const outputError = (message: string, exitCode: number = 1): void => {
 };
 
 export const outputHttpError = (axiosError: AxiosError): void => {
+  outputDebug(axiosError);
+
   if (axiosError.isAxiosError) {
     if (axiosError.code === 'ECONNREFUSED') {
-      outputError(
+      return outputError(
         `Could not connect to Aikido API (${axiosError.message}). Please verify your network settings.`
       );
     } else if (axiosError.response) {
@@ -65,19 +67,18 @@ export const outputHttpError = (axiosError: AxiosError): void => {
       // The request was made but no response was received
     } else if (axiosError.request) {
       return outputError(
-        'No response received from the server. Please try again later.'
-      );
-    } else if (axiosError.code === 'ECONNREFUSED') {
-      return outputError(
-        `Could not connect to Aikido API (${axiosError.message}). Please verify your network settings.`
+        `Error: ${axiosError.message}. No response received from the server, please try again later.`
       );
     }
 
-    outputDebug(axiosError);
     return outputError(
-      `Error: (${axiosError.message}). Please contact us if this problem persists.`
+      `Error: ${axiosError.message}. Please contact us if this problem persists.`
     );
   }
+
+  return outputError(
+    'Unexpected error occurred. Please contact us if this problem persists.'
+  );
 };
 
 // Start a new spinner
