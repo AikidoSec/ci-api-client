@@ -57,12 +57,6 @@ export const outputHttpError = (axiosError: AxiosError): void => {
       }
     }
 
-    if (axiosError.request) {
-      outputError(
-        `No response received from the server. Please verify your network settings and try again.`
-      );
-    }
-
     return outputError(`${axiosError.name}: ${axiosError.message}`);
   }
 
