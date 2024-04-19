@@ -31,14 +31,14 @@ $ aikido-api-client apikey <your-api-key-here>
 Using the `aikido-api-client` to start new scans is very straightforward.
 
 ```sh
-$ aikido-api-client scan <repository_id> <base_commit_id> <head_commit_id>
+$ aikido-api-client scan <repository_id or repository_name> <base_commit_id> <head_commit_id>
 ```
 
 The process will report scan progress and will exit with exitCode `0` if the scan was successfull (`gate_passed: true`). The process will exit with exitCode `10` if the scan was unsuccesfull (`gate_passed: false`). If anything else goes wrong (e.g. API unavailable, scanning unavailable, other unexpected issue) the process will exit with exitCode `1`.
 
 If you want the scan to run quietly (without output), you can add the `--quiet` option to the command.
 
-Please note that the repository_id which you need to provide to the CLI is the unique ID of the Git provider you are using, not the ID of the repository in Aikido. You can also find this ID in Aikido, by going to the repository's detail page and clicking on the Git provider's icon in the header.
+Please note that the repository_id which you need to provide to the CLI is the unique ID of the Git provider you are using, not the ID of the repository in Aikido. You can also find this ID in Aikido, by going to the repository's detail page and clicking on the Git provider's icon in the header. Alternatively, you can pass the repository name as it is defined in Aikido.
 
 ```sh
 # For more options and combinations, check the help output
