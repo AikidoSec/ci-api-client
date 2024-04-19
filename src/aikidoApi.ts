@@ -11,6 +11,7 @@ const getApiHeaders = () => ({
 // #region Scan start
 export type TScanApiOptions = {
   repository_id?: string | number;
+  repository_name?: string | number;
   base_commit_id?: string;
   head_commit_id?: string;
   branch_name?: string;

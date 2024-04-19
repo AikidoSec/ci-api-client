@@ -25,6 +25,7 @@ type TScanArguments = {
   branchName: string;
   options: TScanApiOptions;
   pollInterval: number;
+  useRepositoryName: boolean;
   onStart?: () => void | null;
   onStartComplete?: (startResult: any) => void | null;
   onStartFail?: (error: any) => void | null;
@@ -51,6 +52,7 @@ type TScanArguments = {
 
 type TScanCliOptions = {
   pollInterval: number;
+  useRepositoryName: boolean;
 };
 
 type TScanUserCliOptions = {
@@ -62,6 +64,7 @@ type TScanUserCliOptions = {
   failOnIacScan?: boolean;
   minimumSeverityLevel?: string;
   pollInterval?: number;
+  useRepositoryName?: boolean
 };
 
 async function cli(
@@ -160,6 +163,7 @@ async function cli(
     branchName,
     options: apiOptions,
     pollInterval: cliOptions.pollInterval,
+    useRepositoryName: cliOptions.useRepositoryName,
     onStart,
     onStartComplete,
     onStartFail: onFail,
@@ -177,6 +181,7 @@ export const scan = async ({
   branchName,
   options,
   pollInterval = 5,
+  useRepositoryName = false,
   onStart,
   onStartComplete,
   onStartFail,
@@ -192,13 +197,21 @@ export const scan = async ({
   // Initialize a scan and call onStartComplete, onStartFail
   // handlers where needed
   try {
-    result = await startScan({
-      repository_id: repoId,
+
+   const scan_options = {
       base_commit_id: baseCommitId,
       head_commit_id: headCommitId,
       branch_name: branchName,
       ...options,
-    });
+    }
+
+    if(useRepositoryName) {
+      scan_options.repository_name = repoId
+    } else {
+      scan_options.repository_id = repoId
+    }
+
+    result = await startScan(scan_options);
 
     if (result.scan_id) {
       onStartComplete?.(result);
@@ -242,7 +255,7 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   // Version provided to the API corresponds with the version in package.json
   // of the cli client
   const apiOptions: TScanApiOptions = { version: '1.0.5' };
-  const cliOptions: TScanCliOptions = { pollInterval: 5 };
+  const cliOptions: TScanCliOptions = { pollInterval: 5, useRepositoryName: false };
 
   if (userCliOptions.pullRequestTitle) {
     apiOptions.pull_request_metadata = {
@@ -279,6 +292,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   } else if (userCliOptions.pollInterval) {
     cliOptions.pollInterval = userCliOptions.pollInterval;
   }
+  if(userCliOptions.useRepositoryName) {
+    cliOptions.useRepositoryName = true
+  }
 
   return { apiOptions, cliOptions };
 };
@@ -299,8 +315,8 @@ export const cliSetup = (program: Command) =>
     .command('scan')
     .addArgument(
       new Argument(
-        '<repository_id>',
-        'The internal GitHub/Gitlab/Bitbucket/.. repository id you want to scan.'
+        '<repository_identifier>',
+        'The internal GitHub/Gitlab/Bitbucket/.. repository id you want to scan. Can be a repository name if used with the --use-repository-name option.'
       ).argRequired()
     )
     .addArgument(
@@ -363,6 +379,10 @@ export const cliSetup = (program: Command) =>
       )
         .preset(5)
         .argParser(parseFloat)
+    )
+    .option(
+      '--use-repository-name',
+      'Pass a repository name instead of a GitHub/Gitlab/Bitbucket/.. repository id.'
     )
     .description('Run a scan of an Aikido repo.')
     .action(cli);
