@@ -1,6 +1,6 @@
 {
   "name": "@aikidosec/ci-api-client",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "CLI api client to easily integrate the Aikido public CI API into custom deploy scripts",
   "license": "MIT",
   "author": "Bert Devriese <bert@builtinbruges.com>",
