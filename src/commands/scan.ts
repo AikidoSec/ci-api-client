@@ -359,7 +359,7 @@ export const cliSetup = (program: Command) =>
     )
     .option(
       '--fail-on-secrets-scan',
-      'Let Aikido fail when new leaked secrets have been detected...'
+      'Let Aikido fail when new exposed secrets have been detected...'
     )
     .addOption(
       new Option(
