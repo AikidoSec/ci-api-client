@@ -11,6 +11,7 @@ export type TScanApiOptions = {
     fail_on_dependency_scan?: boolean;
     fail_on_sast_scan?: boolean;
     fail_on_iac_scan?: boolean;
+    fail_on_secrets_scan?: boolean;
     minimum_severity?: string;
     version: string;
 };
@@ -23,6 +24,7 @@ export type TPollIsScanningResult = {
     dependency_scan_completed: boolean;
     sast_scan_completed: boolean;
     iac_scan_completed: boolean;
+    secrets_scan_completed: boolean;
     sbom_scan_completed?: boolean;
 };
 type TPollScanCompletedOptions = {
@@ -33,6 +35,7 @@ type TPollScanFeatureBranchCompletedOptions = {
     new_dependency_issues_found: number;
     new_sast_issues_found: number;
     new_iac_issues_found: number;
+    new_leaked_secret_issues_found: number;
     diff_url: string;
 };
 type TPollScanDefaultBranchCompletedOptions = {

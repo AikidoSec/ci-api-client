@@ -59,6 +59,7 @@ type TScanUserCliOptions = {
   selfManagedScanners?: string[];
   failOnDependencyScan?: boolean;
   failOnSastScan?: boolean;
+  failOnSecretsScan?: boolean;
   failOnIacScan?: boolean;
   minimumSeverityLevel?: string;
   pollInterval?: number;
@@ -271,6 +272,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   if (userCliOptions.failOnIacScan != undefined) {
     apiOptions.fail_on_iac_scan = userCliOptions.failOnIacScan;
   }
+  if (userCliOptions.failOnSecretsScan != undefined) {
+    apiOptions.fail_on_secrets_scan = userCliOptions.failOnSecretsScan;
+  }
   if (userCliOptions.minimumSeverityLevel) {
     apiOptions.minimum_severity = userCliOptions.minimumSeverityLevel;
   }
@@ -352,6 +356,10 @@ export const cliSetup = (program: Command) =>
     .option(
       '--fail-on-iac-scan',
       'Let Aikido fail when new infrastructure as code issues have been detected...'
+    )
+    .option(
+      '--fail-on-secrets-scan',
+      'Let Aikido fail when new exposed secrets have been detected...'
     )
     .addOption(
       new Option(
