@@ -357,6 +357,10 @@ export const cliSetup = (program: Command) =>
       '--fail-on-iac-scan',
       'Let Aikido fail when new infrastructure as code issues have been detected...'
     )
+    .option(
+      '--fail-on-secrets-scan',
+      'Let Aikido fail when new leaked secrets have been detected...'
+    )
     .addOption(
       new Option(
         '--minimum-severity-level <level>',
