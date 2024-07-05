@@ -21,6 +21,7 @@ type TScanUserCliOptions = {
     selfManagedScanners?: string[];
     failOnDependencyScan?: boolean;
     failOnSastScan?: boolean;
+    failOnSecretsScan?: boolean;
     failOnIacScan?: boolean;
     minimumSeverityLevel?: string;
     pollInterval?: number;
