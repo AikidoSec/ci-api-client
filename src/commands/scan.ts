@@ -51,6 +51,7 @@ type TScanArguments = {
 
 type TScanCliOptions = {
   pollInterval: number;
+  maxPollingAttempts: number;
 };
 
 type TScanUserCliOptions = {
@@ -63,6 +64,7 @@ type TScanUserCliOptions = {
   failOnIacScan?: boolean;
   minimumSeverityLevel?: string;
   pollInterval?: number;
+  maxPollingAttempts?: number
 };
 
 async function cli(
@@ -97,6 +99,12 @@ async function cli(
   };
 
   const onNextPoll = () => {
+
+    if(pollCount > cliOptions.maxPollingAttempts) {
+      onPollTimeout()
+      return
+    }
+
     if (loader) {
       loader.text = `Polling for Aikido Security scan to complete (${pollCount})`;
     }
@@ -154,6 +162,12 @@ async function cli(
       outputHttpError(error);
     }
 
+    process.exit(1);
+  };
+
+  const onPollTimeout = () => {
+    loader?.fail();
+    outputError(`Polling exceeded ${cliOptions.maxPollingAttempts} attempts. Unable to get scan results.`);
     process.exit(1);
   };
 
@@ -246,7 +260,7 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   // Version provided to the API corresponds with the version in package.json
   // of the cli client
   const apiOptions: TScanApiOptions = { version: '1.0.5' };
-  const cliOptions: TScanCliOptions = { pollInterval: 5 };
+  const cliOptions: TScanCliOptions = { pollInterval: 5, maxPollingAttempts: 120 };
 
   if (userCliOptions.pullRequestTitle) {
     apiOptions.pull_request_metadata = {
@@ -285,6 +299,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
     outputError('Please provide a valid poll interval');
   } else if (userCliOptions.pollInterval) {
     cliOptions.pollInterval = userCliOptions.pollInterval;
+  }
+  if(userCliOptions.maxPollingAttempts) {
+    cliOptions.maxPollingAttempts = userCliOptions.maxPollingAttempts
   }
 
   return { apiOptions, cliOptions };
@@ -374,6 +391,23 @@ export const cliSetup = (program: Command) =>
       )
         .preset(5)
         .argParser(parseFloat)
+    )
+    .addOption(
+      new Option(
+        '--max-polling-attempts <amount>',
+        'Amount of times to poll for scan results.'
+      )
+      .preset(120) // 10 minutes by default with 5 sec poll interval
+      .argParser(value => {
+        const parsedValue = parseInt(value, 10);
+        if (isNaN(parsedValue)) {
+          throw new InvalidArgumentError('Not a number.');
+        }
+        if(parsedValue > 100) {
+          throw new InvalidArgumentError('Cannot be more than 300.');
+        }
+        return parsedValue;
+      }) 
     )
     .description('Run a scan of an Aikido repo.')
     .action(cli);
