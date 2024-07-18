@@ -260,7 +260,7 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   // Version provided to the API corresponds with the version in package.json
   // of the cli client
   const apiOptions: TScanApiOptions = { version: '1.0.5' };
-  const cliOptions: TScanCliOptions = { pollInterval: 5, maxPollingAttempts: 120 };
+  const cliOptions: TScanCliOptions = { pollInterval: 5, maxPollingAttempts: 75 };
 
   if (userCliOptions.pullRequestTitle) {
     apiOptions.pull_request_metadata = {
@@ -397,7 +397,7 @@ export const cliSetup = (program: Command) =>
         '--max-polling-attempts <amount>',
         'Amount of times to poll for scan results.'
       )
-      .preset(120) // 10 minutes by default with 5 sec poll interval
+      .preset(75) // around 6 minutes by default with 5 sec poll interval
       .argParser(value => {
         const parsedValue = parseInt(value, 10);
         if (isNaN(parsedValue)) {
