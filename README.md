@@ -28,7 +28,7 @@ $ aikido-api-client apikey <your-api-key-here>
 
 ## Use case: pull request checks & gating
 
-Using the `scan` command. The use case here is to add a red/green check to a pull request based on the difference in files (head vs base commit).
+The example below shows how to use the 'scan' command. The use case here is to add a red/green check to a pull request based on the difference in files (head vs base commit).
 
 ```sh
 $ aikido-api-client scan <repository_id or repository_name> <base_commit_id> <head_commit_id>
@@ -36,7 +36,7 @@ $ aikido-api-client scan <repository_id or repository_name> <base_commit_id> <he
 
 ## Use case: release gating
 
-Using the `scan-release` command. The use case here is to block a new build or a new release as long as issues are still open.
+The example below shows how to use the `scan-release` command. The use case here is to block a new build or a new release as long as issues are still open.
 
 ```sh
 $ aikido-api-client scan-release <commit_id>
