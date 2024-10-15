@@ -28,10 +28,16 @@ $ aikido-api-client apikey <your-api-key-here>
 
 ## Usage
 
-Using the `aikido-api-client` to start new scans is very straightforward.
+Using the `scan` command to start new scan for Pull Request Gating:
 
 ```sh
 $ aikido-api-client scan <repository_id or repository_name> <base_commit_id> <head_commit_id>
+```
+
+Using the `scan-release` command to start new scan for Release Gating:
+
+```sh
+$ aikido-api-client scan-release <commit_id>
 ```
 
 The process will report scan progress and will exit with exitCode `0` if the scan was successfull (`gate_passed: true`). The process will exit with exitCode `10` if the scan was unsuccesfull (`gate_passed: false`). If anything else goes wrong (e.g. API unavailable, scanning unavailable, other unexpected issue) the process will exit with exitCode `1`.
@@ -43,9 +49,10 @@ Please note that the repository_id which you need to provide to the CLI is the u
 ```sh
 # For more options and combinations, check the help output
 $ aikido-api-client help scan
+$ aikido-api-client help scan-release
 ```
 
-Uploading custom test results:
+Uploading custom test results (supported by the `scan` command only):
 
 ```sh
 $ aikido-api-client upload --repository-id <repository_id> --type checkov --file <path_to_payload_file>
@@ -54,7 +61,7 @@ $ aikido-api-client upload --repository-id <repository_id> --type checkov --file
 $ aikido-api-client help upload
 ```
 
-For more information about these parameters, please refer to `aikido-api-client help`, `aikido-api-client help scan` or `aikido-api-client help upload`, or [the public ci api page](https://aikido-dev.notion.site/aikido-dev/Aikido-CI-API-78d318b5f5f7477ab072e12f94b21374).
+For more information about these parameters, please refer to `aikido-api-client help`, `aikido-api-client help scan`, `aikido-api-client help scan-release` or `aikido-api-client help upload`, or [the public ci api page](https://aikido-dev.notion.site/aikido-dev/Aikido-CI-API-78d318b5f5f7477ab072e12f94b21374).
 
 ## Help & contributing
 
@@ -75,6 +82,9 @@ If you are missing functionality in this cli tool, please feel free to add it. I
 
 - [Aikido Official Website](https://aikido.dev)
 - [Aikido Github Actions Workflow](https://github.com/AikidoSec/github-actions-workflow)
+- [Aikido GitLab CI Integration](https://gitlab.com/aikido-security/gitlab-ci-integration)
+- [Aikido Bitbucket Pipe](https://bitbucket.org/aikido-production/bitbucket-pipe)
+- [Aikido Azure Pipelines](https://marketplace.visualstudio.com/items?itemName=AikidoSecurity.aikido-security-scanner)
 - [Aikido on Twitter](https://twitter.com/AikidoSecurity)
 
 
