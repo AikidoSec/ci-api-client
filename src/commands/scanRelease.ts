@@ -117,16 +117,10 @@ async function cli(
     } else {
       loader?.fail('Scan completed with issues');
 
-      if (pollResult.open_issues_found) {
+      if (pollResult.new_issues_found) {
         outputLog(
           chalk.gray(
-            chalk.bold('New issues found: ') + pollResult.open_issues_found
-          )
-        );
-      } else if (pollResult.new_issues_found) {
-        outputLog(
-          chalk.gray(
-            chalk.bold('New issues found: ') + pollResult.new_issues_found
+            chalk.bold('Open issues found: ') + pollResult.new_issues_found
           )
         );
       }

@@ -123,12 +123,6 @@ async function cli(
             chalk.bold('Open issues found: ') + pollResult.open_issues_found
           )
         );
-      } else if (pollResult.new_issues_found) {
-        outputLog(
-          chalk.gray(
-            chalk.bold('New issues found: ') + pollResult.new_issues_found
-          )
-        );
       }
 
       if (pollResult.issue_links) {
