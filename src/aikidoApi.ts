@@ -25,6 +25,7 @@ export type TScanApiOptions = {
   fail_on_secrets_scan?: boolean;
   minimum_severity?: string;
   version: string;
+  is_release_gating?: boolean;
 };
 
 export type TStartScanResult = {
