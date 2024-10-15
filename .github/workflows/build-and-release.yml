@@ -25,15 +25,15 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+      - name: Build the library
+        run: yarn build
+
       - name: Get the version
         id: get_version
         run: echo "tag=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
 
       - name: Set the version
         run: npm --no-git-tag-version version ${{ steps.get_version.outputs.tag }}
-
-      - name: Build the library
-        run: yarn build
 
       # - name: Publish to NPM
       #   run: |
