@@ -26,21 +26,26 @@ $ aikido-api-client apikey <your-api-key-here>
 
 ⚠️ Your Aikido API key is stored in `~/.config/configstore/aikido-api-client.json`. If you don't want this behaviour (e.g. for security related issues), you can also provide your API key to `aikido-api-client` by adding `--apikey <your-api-key-here>` to every command. However, for the examples below, we'll assume you've used `aikido-api-client apikey <your-api-key-here>` to save your API key. If `--apikey` is provided while a key is set in the configuration file on disk, the key that was provided with `--apikey` will be used.
 
-## Usage
+## Use case: pull request checks & gating
 
-Using the `scan` command to start new scan for Pull Request Gating:
+Using the `scan` command. The use case here is to add a red/green check to a pull request based on the difference in files (head vs base commit).
 
 ```sh
 $ aikido-api-client scan <repository_id or repository_name> <base_commit_id> <head_commit_id>
 ```
 
-Using the `scan-release` command to start new scan for Release Gating:
+## Use case: release gating
+
+Using the `scan-release` command. The use case here is to block a new build or a new release as long as issues are still open.
 
 ```sh
 $ aikido-api-client scan-release <commit_id>
 ```
 
-The process will report scan progress and will exit with exitCode `0` if the scan was successfull (`gate_passed: true`). The process will exit with exitCode `10` if the scan was unsuccesfull (`gate_passed: false`). If anything else goes wrong (e.g. API unavailable, scanning unavailable, other unexpected issue) the process will exit with exitCode `1`.
+
+## How it works
+
+The CLI will spawn a cloud-based scan and then report scan progress. It will exit with exitCode `0` if the scan was successfull (`gate_passed: true`). The process will exit with exitCode `10` if the scan was unsuccesfull (`gate_passed: false`). If anything else goes wrong (e.g. API unavailable, scanning unavailable, other unexpected issue) the process will exit with exitCode `1`.
 
 If you want the scan to run quietly (without output), you can add the `--quiet` option to the command.
 
