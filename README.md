@@ -37,7 +37,7 @@ $ aikido-api-client scan <repository_id or repository_name> <base_commit_id> <he
 Using the `scan-release` command to start new scan for Release Gating:
 
 ```sh
-$ aikido-api-client scan-release <commit_id>
+$ aikido-api-client scan-release <repository_id or repository_name> <commit_id>
 ```
 
 The process will report scan progress and will exit with exitCode `0` if the scan was successfull (`gate_passed: true`). The process will exit with exitCode `10` if the scan was unsuccesfull (`gate_passed: false`). If anything else goes wrong (e.g. API unavailable, scanning unavailable, other unexpected issue) the process will exit with exitCode `1`.
