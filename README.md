@@ -1,4 +1,4 @@
-# Aikido Security CI API client
+# Aikido Security CI client
 
 <!-- [![NPM Version](http://img.shields.io/npm/v/aikido-api-client.svg?style=flat)](https://www.npmjs.org/package/aikido-api-client)
 [![NPM Downloads](https://img.shields.io/npm/dm/aikido-api-client.svg?style=flat)](https://npmcharts.com/compare/aikido-api-client?minimal=true)
