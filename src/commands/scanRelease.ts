@@ -20,9 +20,7 @@ import {
 
 type TScanArguments = {
   repoId: string | number;
-  baseCommitId: string;
   headCommitId: string;
-  branchName: string;
   options: TScanApiOptions;
   pollInterval: number;
   onStart?: () => void | null;
@@ -67,12 +65,14 @@ type TScanUserCliOptions = {
 
 async function cli(
   repoId: string,
-  baseCommitId: string,
   headCommitId: string,
-  branchName: string,
   options: TScanUserCliOptions,
   command: string
 ) {
+  console.log('repoId', repoId);
+  console.log('headCommitId', headCommitId);
+  console.log('options', options);
+
   const apiKey = getApiKey();
 
   if (!apiKey) {
@@ -87,7 +87,7 @@ async function cli(
 
   // Setup different scan() event handlers
   const onStart = () => {
-    loader = startSpinner('Starting Aikido Security scan');
+    loader = startSpinner('Starting Aikido Security release scan');
   };
 
   const onStartComplete = (startResult: TStartScanResult) => {
@@ -120,7 +120,7 @@ async function cli(
       if (pollResult.open_issues_found) {
         outputLog(
           chalk.gray(
-            chalk.bold('Open issues found: ') + pollResult.open_issues_found
+            chalk.bold('New issues found: ') + pollResult.open_issues_found
           )
         );
       } else if (pollResult.new_issues_found) {
@@ -165,9 +165,7 @@ async function cli(
 
   await scan({
     repoId,
-    baseCommitId,
     headCommitId,
-    branchName,
     options: apiOptions,
     pollInterval: cliOptions.pollInterval,
     onStart,
@@ -182,9 +180,7 @@ async function cli(
 
 export const scan = async ({
   repoId,
-  baseCommitId,
   headCommitId,
-  branchName,
   options,
   pollInterval = 5,
   onStart,
@@ -202,11 +198,13 @@ export const scan = async ({
   // Initialize a scan and call onStartComplete, onStartFail
   // handlers where needed
   try {
+
+    console.log(options);
+
     result = await startScan({
-      repository_id: repoId,
-      base_commit_id: baseCommitId,
+      is_release_gating: true,
       head_commit_id: headCommitId,
-      branch_name: branchName,
+      repository_id: repoId,
       ...options,
     });
 
@@ -309,7 +307,7 @@ const validateCommitId = (value: string) => {
 
 export const cliSetup = (program: Command) =>
   program
-    .command('scan')
+    .command('scan-release')
     .addArgument(
       new Argument(
         '<repository_id>',
@@ -318,36 +316,11 @@ export const cliSetup = (program: Command) =>
     )
     .addArgument(
       new Argument(
-        '<base_commit_id>',
-        'The base commit of the code you want to scan (e.g. the commit where you branched from for your PR or the initial commit of your repo)'
-      )
-        .argRequired()
-        .argParser(validateCommitId)
-    )
-    .addArgument(
-      new Argument(
         '<head_commit_id>',
-        'The latest commit you want to include in your scan (e.g. the latest commit id of your pull request)'
+        'The commit you want to scan'
       )
-        .argRequired()
-        .argParser(validateCommitId)
-    )
-    .addArgument(
-      new Argument('<branch_name>', 'The branch name')
-        .argOptional()
-        .default('main')
-    )
-    .option('--pull-request-title <title>', 'Your pull request title')
-    .option('--pull-request-url <url>', 'Your pull request URL')
-    .addOption(
-      new Option(
-        '--self-managed-scanners <scanners...>',
-        'Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL.'
-      ).choices(['checkov', 'json-sbom'])
-    )
-    .option(
-      '--expected-amount-json-sboms <amount>',
-      'The expected amount of json sbombs'
+      .argRequired()
+      .argParser(validateCommitId)
     )
     .addOption(
       new Option(
@@ -381,7 +354,7 @@ export const cliSetup = (program: Command) =>
         .preset(5)
         .argParser(parseFloat)
     )
-    .description('Run a scan of an Aikido repo.')
+    .description('Run a release scan of an Aikido repo.')
     .action(cli);
 
 export default { cli, cliSetup, scan };
