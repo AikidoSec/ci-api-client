@@ -4,7 +4,7 @@
 [![NPM Downloads](https://img.shields.io/npm/dm/aikido-api-client.svg?style=flat)](https://npmcharts.com/compare/aikido-api-client?minimal=true)
 [![Install Size](https://packagephobia.now.sh/badge?p=aikido-api-client)](https://packagephobia.now.sh/result?p=aikido-api-client) -->
 
-This cli tool can help integrate Aikido Security scans into any custom CI pipeline such as Jenkins, CircleCI,... 
+This CLI tool can help integrate Aikido Security scans into any custom CI pipeline such as Jenkins, CircleCI,... 
 If you are looking to add checks to a Github, Azure Repos,.. pull request, you do not need this package and you can use our native plugins.
 
 ## Installation and setup
