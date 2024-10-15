@@ -4,7 +4,7 @@
 [![NPM Downloads](https://img.shields.io/npm/dm/aikido-api-client.svg?style=flat)](https://npmcharts.com/compare/aikido-api-client?minimal=true)
 [![Install Size](https://packagephobia.now.sh/badge?p=aikido-api-client)](https://packagephobia.now.sh/result?p=aikido-api-client) -->
 
-CLI helper for the public [Aikido CI API](https://aikido-dev.notion.site/aikido-dev/Aikido-CI-API-78d318b5f5f7477ab072e12f94b21374). This cli tool can help integrate Aikido into a custom CI pipeline without having to implement the Aikido CI API yourself.
+This cli tool can help integrate Aikido into a custom CI pipeline (eg Jenkins, Azure pipelines,..). 
 
 ## Installation and setup
 
@@ -26,6 +26,14 @@ $ aikido-api-client apikey <your-api-key-here>
 
 ⚠️ Your Aikido API key is stored in `~/.config/configstore/aikido-api-client.json`. If you don't want this behaviour (e.g. for security related issues), you can also provide your API key to `aikido-api-client` by adding `--apikey <your-api-key-here>` to every command. However, for the examples below, we'll assume you've used `aikido-api-client apikey <your-api-key-here>` to save your API key. If `--apikey` is provided while a key is set in the configuration file on disk, the key that was provided with `--apikey` will be used.
 
+## Use case: release gating
+
+The example below shows how to use the `scan-release` command. The use case here is to block a new build or a new release as long as issues are still open.
+
+```sh
+$ aikido-api-client scan-release <commit_id>
+```
+
 ## Use case: pull request checks & gating
 
 The example below shows how to use the 'scan' command. The use case here is to add a red/green check to a pull request based on the difference in files (head vs base commit).
@@ -34,13 +42,7 @@ The example below shows how to use the 'scan' command. The use case here is to a
 $ aikido-api-client scan <repository_id or repository_name> <base_commit_id> <head_commit_id>
 ```
 
-## Use case: release gating
 
-The example below shows how to use the `scan-release` command. The use case here is to block a new build or a new release as long as issues are still open.
-
-```sh
-$ aikido-api-client scan-release <commit_id>
-```
 
 
 ## How it works
