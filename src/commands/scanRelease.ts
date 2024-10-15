@@ -340,7 +340,7 @@ export const cliSetup = (program: Command) =>
         '--poll-interval [interval]',
         'The poll interval when checking for an updated scan result'
       )
-        .preset(5)
+        .preset(10)
         .argParser(parseFloat)
     )
     .description('Run a release scan of an Aikido repo.')
