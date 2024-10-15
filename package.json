@@ -8,11 +8,11 @@
   "type": "module",
   "main": "lib/index.js",
   "bin": {
-    "aikido-api-client": "./lib/index.js"
+    "aikido-api-client": "lib/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/AikidoSec/api-client.git"
+    "url": "git+https://github.com/AikidoSec/ci-api-client.git"
   },
   "scripts": {
     "start": "nodemon --watch 'src/**/*.ts' --esm --exec 'ts-node' src/index.ts",
