@@ -41,10 +41,10 @@ Arguments:
   repository_id                     The internal GitHub/Gitlab/Bitbucket/.. repository id you want to scan.
   commit_id                         The commit you want to scan
 Options:
-  --no-fail-on-dependency-scan      Don't fail when scanning depedencies...
-  --fail-on-sast-scan               Let Aikido fail when new static code analysis issues have been detected...
-  --fail-on-iac-scan                Let Aikido fail when new infrastructure as code issues have been detected...
-  --fail-on-secrets-scan            Let Aikido fail when new exposed secrets have been detected...
+  --no-fail-on-dependency-scan      Don't fail when scanning depedencies. Default is to fail when new dependencies are detected.
+  --fail-on-sast-scan               Let Aikido fail when new static code analysis issues have been detected
+  --fail-on-iac-scan                Let Aikido fail when new infrastructure as code issues have been detected
+  --fail-on-secrets-scan            Let Aikido fail when new exposed secrets have been detected
   --minimum-severity-level <level>  Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "LOW", "MEDIUM",
                                     "HIGH", "CRITICAL")
   --poll-interval [interval]        The poll interval when checking for an updated scan result (preset: 10)
@@ -73,10 +73,10 @@ Options:
   --self-managed-scanners <scanners...>  Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "checkov",
                                          "json-sbom")
   --expected-amount-json-sboms <amount>  The expected amount of json sbombs
-  --no-fail-on-dependency-scan           Don't fail when scanning depedencies...
-  --fail-on-sast-scan                    Let Aikido fail when new static code analysis issues have been detected...
-  --fail-on-iac-scan                     Let Aikido fail when new infrastructure as code issues have been detected...
-  --fail-on-secrets-scan                 Let Aikido fail when new exposed secrets have been detected...
+  --no-fail-on-dependency-scan           Don't fail when scanning depedencies. Default is to fail when new dependencies are detected.
+  --fail-on-sast-scan                    Let Aikido fail when new static code analysis issues have been detected
+  --fail-on-iac-scan                     Let Aikido fail when new infrastructure as code issues have been detected
+  --fail-on-secrets-scan                 Let Aikido fail when new exposed secrets have been detected
   --minimum-severity-level <level>       Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "LOW",
                                          "MEDIUM", "HIGH", "CRITICAL")
   --poll-interval [interval]             The poll interval when checking for an updated scan result (preset: 5)
