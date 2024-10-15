@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import { TPollIsScanningResult, TPollScanCompletedDefaultBranchResult, TPollScanFeatureBranchCompletedResult, TScanApiOptions } from '../aikidoApi.js';
 type TScanArguments = {
     repoId: string | number;
-    headCommitId: string;
+    commitId: string;
     options: TScanApiOptions;
     pollInterval: number;
     onStart?: () => void | null;
@@ -24,12 +24,12 @@ type TScanUserCliOptions = {
     minimumSeverityLevel?: string;
     pollInterval?: number;
 };
-declare function cli(repoId: string, headCommitId: string, options: TScanUserCliOptions, command: string): Promise<void>;
-export declare const scan: ({ repoId, headCommitId, options, pollInterval, onStart, onStartComplete, onStartFail, onScanStart, onNextPoll, onScanComplete, onScanFail, }: TScanArguments) => Promise<void>;
+declare function cli(repoId: string, commitId: string, options: TScanUserCliOptions, command: string): Promise<void>;
+export declare const scan: ({ repoId, commitId, options, pollInterval, onStart, onStartComplete, onStartFail, onScanStart, onNextPoll, onScanComplete, onScanFail, }: TScanArguments) => Promise<void>;
 export declare const cliSetup: (program: Command) => Command;
 declare const _default: {
     cli: typeof cli;
     cliSetup: (program: Command) => Command;
-    scan: ({ repoId, headCommitId, options, pollInterval, onStart, onStartComplete, onStartFail, onScanStart, onNextPoll, onScanComplete, onScanFail, }: TScanArguments) => Promise<void>;
+    scan: ({ repoId, commitId, options, pollInterval, onStart, onStartComplete, onStartFail, onScanStart, onNextPoll, onScanComplete, onScanFail, }: TScanArguments) => Promise<void>;
 };
 export default _default;

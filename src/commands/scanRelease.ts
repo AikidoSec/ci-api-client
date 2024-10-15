@@ -20,7 +20,7 @@ import {
 
 type TScanArguments = {
   repoId: string | number;
-  headCommitId: string;
+  commitId: string;
   options: TScanApiOptions;
   pollInterval: number;
   onStart?: () => void | null;
@@ -65,13 +65,10 @@ type TScanUserCliOptions = {
 
 async function cli(
   repoId: string,
-  headCommitId: string,
+  commitId: string,
   options: TScanUserCliOptions,
   command: string
 ) {
-  console.log('repoId', repoId);
-  console.log('headCommitId', headCommitId);
-  console.log('options', options);
 
   const apiKey = getApiKey();
 
@@ -110,7 +107,7 @@ async function cli(
 
   const onScanComplete = (pollResult: any) => {
     if (pollResult.gate_passed === true) {
-      loader?.succeed('Scan completed, no new issues found');
+      loader?.succeed('Scan completed, no open issues found');
       if (pollResult.diff_url) {
         outputLog(chalk.gray(`* Diff url: ${pollResult.diff_url}`));
       }
@@ -148,7 +145,7 @@ async function cli(
 
     if (error.response?.status && error.response?.status === 404) {
       outputError(
-        'Please verify your repoId, baseCommitId, headCommitId and branchName'
+        'Please verify your commit SHA'
       );
     } else {
       outputHttpError(error);
@@ -159,7 +156,7 @@ async function cli(
 
   await scan({
     repoId,
-    headCommitId,
+    commitId,
     options: apiOptions,
     pollInterval: cliOptions.pollInterval,
     onStart,
@@ -174,9 +171,9 @@ async function cli(
 
 export const scan = async ({
   repoId,
-  headCommitId,
+  commitId,
   options,
-  pollInterval = 5,
+  pollInterval = 10,
   onStart,
   onStartComplete,
   onStartFail,
@@ -193,11 +190,9 @@ export const scan = async ({
   // handlers where needed
   try {
 
-    console.log(options);
-
     result = await startScan({
       is_release_gating: true,
-      head_commit_id: headCommitId,
+      head_commit_id: commitId,
       repository_id: repoId,
       ...options,
     });
@@ -310,7 +305,7 @@ export const cliSetup = (program: Command) =>
     )
     .addArgument(
       new Argument(
-        '<head_commit_id>',
+        '<commit_id>',
         'The commit you want to scan'
       )
       .argRequired()
