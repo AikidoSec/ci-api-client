@@ -53,6 +53,13 @@ program
     process.env.CLI_DEBUG = true;
   });
 
+// Add global option "--plain-output"
+program
+  .option('--plain-output', 'Disables the formatting on output')
+  .on('option:plain-output', function () {
+    chalk.level = 0 // Disables all formatting for chalk
+  });
+
 // Add global option "--apikey"
 program.option(
   '--apikey <apikey>',
