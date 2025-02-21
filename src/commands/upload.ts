@@ -44,7 +44,7 @@ async function cli(options: TUploadUserCliOptions, command: string) {
   const apiKey = getApiKey();
 
   if (!apiKey) {
-    outputError('Please set an api key using: aikido-cli apikey <key>');
+    outputError('Please set an api key using: aikido-cli-client apikey <key>');
   }
 
   // Process command options and group them into apiOptions hash
