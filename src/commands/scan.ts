@@ -76,7 +76,7 @@ async function cli(
   const apiKey = getApiKey();
 
   if (!apiKey) {
-    outputError('Please set an api key using: aikido-cli apikey <key>');
+    outputError('Please set an api key using: aikido-cli-client apikey <key>');
   }
 
   // Process command options and group them into apiOptions hash
@@ -245,7 +245,7 @@ export const scan = async ({
 const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   // Version provided to the API corresponds with the version in package.json
   // of the cli client
-  const apiOptions: TScanApiOptions = { version: '1.0.8' };
+  const apiOptions: TScanApiOptions = { version: '1.0.9' };
   const cliOptions: TScanCliOptions = { pollInterval: 5 };
 
   if (userCliOptions.pullRequestTitle) {
