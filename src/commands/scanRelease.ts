@@ -84,6 +84,8 @@ async function cli(
 
   // Setup different scan() event handlers
   const onStart = () => {
+    const formattedConfigOptions = getFormattedScanConfigurationOptions(apiOptions);
+    outputLog(chalk.gray(`Scan configuration:\n${formattedConfigOptions}`))
     loader = startSpinner('Starting Aikido Security release scan');
   };
 
@@ -297,6 +299,18 @@ const validateCommitId = (value: string) => {
 
   return value;
 };
+
+const getFormattedScanConfigurationOptions = (apiOptions: TScanApiOptions): String => {
+  const options = {
+    'fail-on-dependency-scan': apiOptions.fail_on_dependency_scan ?? false,
+    'fail-on-sast-scan': apiOptions.fail_on_sast_scan ?? false,
+    'fail-on-iac-scan': apiOptions.fail_on_iac_scan ?? false,
+    'fail-on-secrets-scan': apiOptions.fail_on_secrets_scan ?? false,
+    'minimum-severity-level': apiOptions.minimum_severity ?? 'critical',
+  }
+
+  return Object.entries(options).map(([ key, value ]) => `\t- ${key}: ${value}`).join('\n')
+}
 
 export const cliSetup = (program: Command) =>
   program
