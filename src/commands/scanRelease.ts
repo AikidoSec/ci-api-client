@@ -61,6 +61,7 @@ type TScanUserCliOptions = {
   failOnIacScan?: boolean;
   minimumSeverityLevel?: string;
   pollInterval?: number;
+  baseBranch?: string;
 };
 
 async function cli(
@@ -275,6 +276,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   if (userCliOptions.minimumSeverityLevel) {
     apiOptions.minimum_severity = userCliOptions.minimumSeverityLevel;
   }
+  if (userCliOptions.baseBranch) {
+    apiOptions.base_branch = userCliOptions.baseBranch;
+  }
   if (
     userCliOptions.pollInterval &&
     (isNaN(userCliOptions.pollInterval) || userCliOptions.pollInterval <= 0)
@@ -347,6 +351,12 @@ export const cliSetup = (program: Command) =>
         .preset(10)
         .argParser(parseFloat)
     )
+    .addOption(
+      new Option(
+        '--base-branch <branchname>',
+        'Base branch for the release gated scan.'
+      )
+    ) 
     .description('Run a release scan of an Aikido repo.')
     .action(cli);
 
