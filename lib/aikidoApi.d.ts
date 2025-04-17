@@ -15,6 +15,7 @@ export type TScanApiOptions = {
     minimum_severity?: string;
     version: string;
     is_release_gating?: boolean;
+    base_branch?: string;
 };
 export type TStartScanResult = {
     scan_id: number;
