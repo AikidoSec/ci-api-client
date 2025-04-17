@@ -80,7 +80,7 @@ Options:
   --minimum-severity-level <level>       Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "LOW",
                                          "MEDIUM", "HIGH", "CRITICAL")
   --poll-interval [interval]             The poll interval when checking for an updated scan result (preset: 5)
-  --base-branch <branchname>             Base branch for the release gated scan.
+  --base-branch <branchname>             Optional: base branch for the release gated scan.
   -h, --help                             display help for command
 ```
 
