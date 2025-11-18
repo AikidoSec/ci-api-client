@@ -45,8 +45,10 @@ Options:
   --fail-on-sast-scan               Let Aikido fail when new static code analysis issues have been detected
   --fail-on-iac-scan                Let Aikido fail when new infrastructure as code issues have been detected
   --fail-on-secrets-scan            Let Aikido fail when new exposed secrets have been detected
-  --minimum-severity-level <level>  Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "LOW", "MEDIUM",
-                                    "HIGH", "CRITICAL")
+  --minimum-severity-level <level>  Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. 
+                                    (choices: "LOW", "MEDIUM", "HIGH", "CRITICAL")
+  --region <region>                 Specify the region where your Aikido workspace is located. Accepted options are: eu, us and me
+                                    (choices: "eu", "us", "me")
   --poll-interval [interval]        The poll interval when checking for an updated scan result (preset: 10)
   -h, --help                        display help for command
 ```
@@ -70,15 +72,17 @@ Arguments:
 Options:
   --pull-request-title <title>           Your pull request title
   --pull-request-url <url>               Your pull request URL
-  --self-managed-scanners <scanners...>  Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "checkov",
-                                         "json-sbom")
+  --self-managed-scanners <scanners...>  Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL.
+                                         (choices: "checkov","json-sbom")
   --expected-amount-json-sboms <amount>  The expected amount of json sbombs
   --no-fail-on-dependency-scan           Don't fail when scanning depedencies. Default is to fail on new CVE
   --fail-on-sast-scan                    Let Aikido fail when new static code analysis issues have been detected
   --fail-on-iac-scan                     Let Aikido fail when new infrastructure as code issues have been detected
   --fail-on-secrets-scan                 Let Aikido fail when new exposed secrets have been detected
-  --minimum-severity-level <level>       Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "LOW",
-                                         "MEDIUM", "HIGH", "CRITICAL")
+  --minimum-severity-level <level>       Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL.
+                                         (choices: "LOW", "MEDIUM", "HIGH", "CRITICAL")
+  --region <region>                      Specify the region where your Aikido workspace is located. Accepted options are: eu, us and me
+                                         (choices: "eu", "us", "me")                                       
   --poll-interval [interval]             The poll interval when checking for an updated scan result (preset: 5)
   --base-branch <branchname>             Optional: base branch for the release gated scan.
   -h, --help                             display help for command
