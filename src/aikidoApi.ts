@@ -2,7 +2,17 @@ import axios from 'axios';
 import { getApiKey } from './configuration.js';
 import { outputDebug } from './output.js';
 
-const getApiUrl = () => process.env.AIKIDO_API || 'https://app.aikido.dev';
+const getApiUrl = (region = 'eu') => {
+  if (region == 'us') {
+    return process.env.AIKIDO_US_API || 'https://app.us.aikido.dev';
+  }
+
+  if (region == 'me') {
+    return process.env.AIKIDO_US_API || 'https://app.me.aikido.dev';
+  }
+
+  return process.env.AIKIDO_API || 'https://app.aikido.dev';
+};
 const getApiHeaders = () => ({
   'Content-Type': 'application/json',
   'X-AIK-API-SECRET': getApiKey(),
@@ -27,6 +37,7 @@ export type TScanApiOptions = {
   version: string;
   is_release_gating?: boolean;
   base_branch?: string;
+  region?: string;
 };
 
 export type TStartScanResult = {
@@ -38,7 +49,9 @@ export type TStartScanResult = {
 export async function startScan(
   data: TScanApiOptions
 ): Promise<TStartScanResult> {
-  const requestUrl = `${getApiUrl()}/api/integrations/continuous_integration/scan/repository`;
+  const requestUrl = `${getApiUrl(
+    data.region
+  )}/api/integrations/continuous_integration/scan/repository`;
   const requestConfig = {
     method: 'POST',
     data,
@@ -92,13 +105,16 @@ export type TPollScanCompletedDefaultBranchResult = TPollIsScanningResult &
   TPollScanDefaultBranchCompletedOptions;
 
 export async function pollScanStatus(
-  scanId: number
+  scanId: number,
+  region?: string
 ): Promise<
   | TPollIsScanningResult
   | TPollScanFeatureBranchCompletedResult
   | TPollScanCompletedDefaultBranchResult
 > {
-  const requestUrl = `${getApiUrl()}/api/integrations/continuous_integration/scan/repository`;
+  const requestUrl = `${getApiUrl(
+    region
+  )}/api/integrations/continuous_integration/scan/repository`;
   const requestConfig = {
     method: 'GET',
     params: { scan_id: scanId },
@@ -127,6 +143,7 @@ export type TUploadApiOptions = {
   container_image_name?: string;
   payload_type: TUploadPayloadType;
   payload: string;
+  region?: string;
 };
 
 export type TUploadResult = {
@@ -136,7 +153,9 @@ export type TUploadResult = {
 export async function uploadCustomScanResult(
   data: TUploadApiOptions
 ): Promise<TUploadResult> {
-  const requestUrl = `${getApiUrl()}/api/integrations/continuous_integration/scan/custom`;
+  const requestUrl = `${getApiUrl(
+    data.region
+  )}/api/integrations/continuous_integration/scan/custom`;
   const requestConfig = {
     method: 'POST',
     data,

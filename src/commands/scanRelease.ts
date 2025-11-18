@@ -62,6 +62,7 @@ type TScanUserCliOptions = {
   minimumSeverityLevel?: string;
   pollInterval?: number;
   baseBranch?: string;
+  region?: string;
 };
 
 async function cli(
@@ -70,7 +71,6 @@ async function cli(
   options: TScanUserCliOptions,
   command: string
 ) {
-
   const apiKey = getApiKey();
 
   if (!apiKey) {
@@ -145,12 +145,10 @@ async function cli(
     loader?.fail();
 
     if (error.response?.status && error.response?.status === 404) {
-      if(error.response?.data?.reason_phrase) {
+      if (error.response?.data?.reason_phrase) {
         outputError(error.response?.data?.reason_phrase);
       } else {
-        outputError(
-          'Please verify your repository id or commit SHA'
-        );
+        outputError('Please verify your repository id or commit SHA');
       }
     } else {
       outputHttpError(error);
@@ -194,7 +192,6 @@ export const scan = async ({
   // Initialize a scan and call onStartComplete, onStartFail
   // handlers where needed
   try {
-
     result = await startScan({
       is_release_gating: true,
       head_commit_id: commitId,
@@ -219,7 +216,7 @@ export const scan = async ({
   // Poll status with a setTimeout
   const pollStatus = async () => {
     try {
-      pollResult = await pollScanStatus(result.scan_id);
+      pollResult = await pollScanStatus(result.scan_id, options.region);
 
       // If "all_scans_completed" returns true, call the onScanComplete
       // handler, if not, re poll with `pollInterval`
@@ -287,6 +284,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   } else if (userCliOptions.pollInterval) {
     cliOptions.pollInterval = userCliOptions.pollInterval;
   }
+  if (userCliOptions.region != undefined) {
+    apiOptions.region = userCliOptions.region;
+  }
 
   return { apiOptions, cliOptions };
 };
@@ -312,12 +312,9 @@ export const cliSetup = (program: Command) =>
       ).argRequired()
     )
     .addArgument(
-      new Argument(
-        '<commit_id>',
-        'The commit you want to scan'
-      )
-      .argRequired()
-      .argParser(validateCommitId)
+      new Argument('<commit_id>', 'The commit you want to scan')
+        .argRequired()
+        .argParser(validateCommitId)
     )
     .addOption(
       new Option(
@@ -345,6 +342,12 @@ export const cliSetup = (program: Command) =>
     )
     .addOption(
       new Option(
+        '--region <region>',
+        'Specify the region where your Aikido workspace is located. Accepted options are: eu, us and me.'
+      ).choices(['eu', 'us', 'me'])
+    )
+    .addOption(
+      new Option(
         '--poll-interval [interval]',
         'The poll interval when checking for an updated scan result'
       )
@@ -356,7 +359,7 @@ export const cliSetup = (program: Command) =>
         '--base-branch <branchname>',
         'Base branch for the release gated scan.'
       )
-    ) 
+    )
     .description('Run a release scan of an Aikido repo.')
     .action(cli);
 

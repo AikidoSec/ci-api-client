@@ -63,6 +63,7 @@ type TScanUserCliOptions = {
   failOnIacScan?: boolean;
   minimumSeverityLevel?: string;
   pollInterval?: number;
+  region?: string;
 };
 
 async function cli(
@@ -221,7 +222,7 @@ export const scan = async ({
   // Poll status with a setTimeout
   const pollStatus = async () => {
     try {
-      pollResult = await pollScanStatus(result.scan_id);
+      pollResult = await pollScanStatus(result.scan_id, options.region);
 
       // If "all_scans_completed" returns true, call the onScanComplete
       // handler, if not, re poll with `pollInterval`
@@ -285,6 +286,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
     outputError('Please provide a valid poll interval');
   } else if (userCliOptions.pollInterval) {
     cliOptions.pollInterval = userCliOptions.pollInterval;
+  }
+  if (userCliOptions.region != undefined) {
+    apiOptions.region = userCliOptions.region;
   }
 
   return { apiOptions, cliOptions };
@@ -366,6 +370,12 @@ export const cliSetup = (program: Command) =>
         '--minimum-severity-level <level>',
         'Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL.'
       ).choices(['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'])
+    )
+    .addOption(
+      new Option(
+        '--region <region>',
+        'Specify the region where your Aikido workspace is located. Accepted options are: eu, us and me.'
+      ).choices(['eu', 'us', 'me'])
     )
     .addOption(
       new Option(

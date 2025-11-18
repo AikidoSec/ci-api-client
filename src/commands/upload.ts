@@ -38,6 +38,7 @@ type TUploadUserCliOptions = {
   type: TUploadPayloadType;
   file?: string;
   payload?: string;
+  region?: string;
 };
 
 async function cli(options: TUploadUserCliOptions, command: string) {
@@ -104,6 +105,7 @@ const parseCliOptions = async (
     container_image_name: userCliOptions.containerImage ?? undefined,
     payload_type: userCliOptions.type,
     payload: '',
+    region: userCliOptions.region ?? undefined,
   };
 
   const cliOptions: TUploadCliOptions = {
@@ -176,6 +178,12 @@ export const cliSetup = (program: Command) =>
     .option(
       '-f, --file <payloadFile>',
       'Specify the payload file. The cli command wil read the file and use the contents as payload data.'
+    )
+    .addOption(
+      new Option(
+        '--region <region>',
+        'Specify the region where your Aikido workspace is located. Accepted options are: eu, us and me.'
+      ).choices(['eu', 'us', 'me'])
     )
     .option('-p, --payload <payload>', 'Set the payload')
     .description('Upload a custom scan result.')
