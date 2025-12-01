@@ -20,7 +20,7 @@ program
   .description(
     'CLI api client to easily integrate the Aikido public CI API into custom deploy scripts'
   )
-  .version('1.0.10');
+  .version('1.0.11');
 
 // Load in all app commands and set them up in the `program` instance
 apiKey.cliSetup(program);
