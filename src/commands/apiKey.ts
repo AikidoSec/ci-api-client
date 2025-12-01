@@ -2,7 +2,7 @@ import { Argument, Command } from 'commander';
 import { setApiKey } from '../configuration.js';
 import { outputError, outputLog } from '../output.js';
 
-const API_KEY_REGEX = /^AIK_CI_[a-zA-Z0-9]{64}$/g;
+const API_KEY_REGEX = /^(?:AIK_CI_|AIK_CI_US_|AIK_CI_ME_)[A-Za-z0-9]{64}$/;
 
 function cli(apiKey: string): void {
   const isValidApiKey =
