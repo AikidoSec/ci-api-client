@@ -245,7 +245,7 @@ export const scan = async ({
 const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   // Version provided to the API corresponds with the version in package.json
   // of the cli client
-  const apiOptions: TScanApiOptions = { version: '1.0.9' };
+  const apiOptions: TScanApiOptions = { version: '1.0.10' };
   const cliOptions: TScanCliOptions = { pollInterval: 5 };
 
   if (userCliOptions.pullRequestTitle) {

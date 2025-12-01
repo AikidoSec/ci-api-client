@@ -70,7 +70,6 @@ async function cli(
   options: TScanUserCliOptions,
   command: string
 ) {
-
   const apiKey = getApiKey();
 
   if (!apiKey) {
@@ -145,12 +144,10 @@ async function cli(
     loader?.fail();
 
     if (error.response?.status && error.response?.status === 404) {
-      if(error.response?.data?.reason_phrase) {
+      if (error.response?.data?.reason_phrase) {
         outputError(error.response?.data?.reason_phrase);
       } else {
-        outputError(
-          'Please verify your repository id or commit SHA'
-        );
+        outputError('Please verify your repository id or commit SHA');
       }
     } else {
       outputHttpError(error);
@@ -194,7 +191,6 @@ export const scan = async ({
   // Initialize a scan and call onStartComplete, onStartFail
   // handlers where needed
   try {
-
     result = await startScan({
       is_release_gating: true,
       head_commit_id: commitId,
@@ -243,7 +239,7 @@ export const scan = async ({
 const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   // Version provided to the API corresponds with the version in package.json
   // of the cli client
-  const apiOptions: TScanApiOptions = { version: '1.0.9' };
+  const apiOptions: TScanApiOptions = { version: '1.0.10' };
   const cliOptions: TScanCliOptions = { pollInterval: 10 };
 
   if (userCliOptions.pullRequestTitle) {
@@ -312,12 +308,9 @@ export const cliSetup = (program: Command) =>
       ).argRequired()
     )
     .addArgument(
-      new Argument(
-        '<commit_id>',
-        'The commit you want to scan'
-      )
-      .argRequired()
-      .argParser(validateCommitId)
+      new Argument('<commit_id>', 'The commit you want to scan')
+        .argRequired()
+        .argParser(validateCommitId)
     )
     .addOption(
       new Option(
@@ -356,7 +349,7 @@ export const cliSetup = (program: Command) =>
         '--base-branch <branchname>',
         'Base branch for the release gated scan.'
       )
-    ) 
+    )
     .description('Run a release scan of an Aikido repo.')
     .action(cli);
 

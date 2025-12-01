@@ -20,7 +20,7 @@ program
   .description(
     'CLI api client to easily integrate the Aikido public CI API into custom deploy scripts'
   )
-  .version('1.0.9');
+  .version('1.0.10');
 
 // Load in all app commands and set them up in the `program` instance
 apiKey.cliSetup(program);
@@ -57,7 +57,7 @@ program
 program
   .option('--plain-output', 'Disables the formatting on output')
   .on('option:plain-output', function () {
-    chalk.level = 0 // Disables all formatting for chalk
+    chalk.level = 0; // Disables all formatting for chalk
   });
 
 // Add global option "--apikey"
