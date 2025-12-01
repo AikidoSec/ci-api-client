@@ -3,17 +3,17 @@ import { getApiKey } from './configuration.js';
 import { outputDebug } from './output.js';
 
 const getApiUrl = () => {
-  const apiKey = getApiKey()
+  const apiKey = getApiKey();
 
-  if(apiKey.startsWith('AIK_CI_US_')) {
-    return process.env.AIKIDO_US_API || 'https://app.us.aikido.dev'
+  if (apiKey.startsWith('AIK_CI_US_')) {
+    return process.env.AIKIDO_US_API || 'https://app.us.aikido.dev';
   }
 
-  if(apiKey.startsWith('AIK_CI_ME_')) {
-    return process.env.AIKIDO_ME_API || 'https://app.me.aikido.dev'
+  if (apiKey.startsWith('AIK_CI_ME_')) {
+    return process.env.AIKIDO_ME_API || 'https://app.me.aikido.dev';
   }
 
-  return process.env.AIKIDO_API || 'https://app.aikido.dev'
+  return process.env.AIKIDO_API || 'https://app.aikido.dev';
 };
 const getApiHeaders = () => ({
   'Content-Type': 'application/json',

@@ -57,7 +57,7 @@ program
 program
   .option('--plain-output', 'Disables the formatting on output')
   .on('option:plain-output', function () {
-    chalk.level = 0 // Disables all formatting for chalk
+    chalk.level = 0; // Disables all formatting for chalk
   });
 
 // Add global option "--apikey"
