@@ -403,8 +403,8 @@ export const cliSetup = (program: Command) =>
         if (isNaN(parsedValue)) {
           throw new InvalidArgumentError('Not a number.');
         }
-        if(parsedValue > 100) {
-          throw new InvalidArgumentError('Cannot be more than 300.');
+        if(parsedValue > 200) {
+          throw new InvalidArgumentError('Cannot be more than 200.');
         }
         return parsedValue;
       }) 
