@@ -24,6 +24,7 @@ type TScanUserCliOptions = {
     minimumSeverityLevel?: string;
     pollInterval?: number;
     baseBranch?: string;
+    slaMode?: boolean;
 };
 declare function cli(repoId: string, commitId: string, options: TScanUserCliOptions, command: string): Promise<void>;
 export declare const scan: ({ repoId, commitId, options, pollInterval, onStart, onStartComplete, onStartFail, onScanStart, onNextPoll, onScanComplete, onScanFail, }: TScanArguments) => Promise<void>;

@@ -62,6 +62,7 @@ type TScanUserCliOptions = {
   minimumSeverityLevel?: string;
   pollInterval?: number;
   baseBranch?: string;
+  slaMode?: boolean;
 };
 
 async function cli(
@@ -275,6 +276,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   if (userCliOptions.baseBranch) {
     apiOptions.base_branch = userCliOptions.baseBranch;
   }
+  if (userCliOptions.slaMode) {
+    apiOptions.sla_mode = true;
+  }
   if (
     userCliOptions.pollInterval &&
     (isNaN(userCliOptions.pollInterval) || userCliOptions.pollInterval <= 0)
@@ -349,6 +353,10 @@ export const cliSetup = (program: Command) =>
         '--base-branch <branchname>',
         'Base branch for the release gated scan.'
       )
+    )
+    .option(
+      '--sla-mode',
+      'Let Aikido only fail only on open issues that have gone out of SLA.'
     )
     .description('Run a release scan of an Aikido repo.')
     .action(cli);
