@@ -115,7 +115,12 @@ async function cli(
     } else {
       loader?.fail('Scan completed with issues');
 
-      if (pollResult.new_issues_found) {
+      if (apiOptions.sla_mode) {
+        outputLog(
+          chalk.gray(
+            chalk.bold('Issues outside of SLA found: ') + pollResult.issues_outside_sla)
+        );
+      } else if (pollResult.new_issues_found) {
         outputLog(
           chalk.gray(
             chalk.bold('Open issues found: ') + pollResult.new_issues_found
