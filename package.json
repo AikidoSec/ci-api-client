@@ -47,5 +47,8 @@
     "aikido",
     "security",
     "cli"
-  ]
+  ],
+  "overrides": {
+    "form-data@<=4.0.4": "4.0.4"
+  }
 }
