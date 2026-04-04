@@ -17,11 +17,11 @@
   "scripts": {
     "start": "nodemon --watch 'src/**/*.ts' --esm --exec 'ts-node' src/index.ts",
     "build": "tsc -p .",
-    "local": "yarn build && yarn global add file:$PWD; aikido-api-client",
-    "local-rm": "yarn global remove aikido-api-client",
+    "local": "npm run build && npm install -g file:$PWD; aikido-api-client",
+    "local-rm": "npm uninstall -g @aikidosec/ci-api-client",
     "format": "prettier --write 'src/**/*.ts'",
     "//": {
-      "refresh": "rm -rf ./node_modules ./yarn.lock && yarn"
+      "refresh": "rm -rf ./node_modules ./npm-shrinkwrap.json && npm install && npm shrinkwrap"
     }
   },
   "dependencies": {
