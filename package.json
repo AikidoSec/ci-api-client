@@ -22,7 +22,7 @@
   },
   "scripts": {
     "start": "nodemon --watch 'src/**/*.ts' --esm --exec 'ts-node' src/index.ts",
-    "build": "tsc -p . && esbuild lib/index.js --bundle --platform=node --target=node18 --format=cjs --outfile=lib/cli.cjs",
+    "build": "tsc -p . && esbuild .build/index.js --bundle --platform=node --target=node18 --format=cjs --outfile=lib/cli.cjs && rm -rf .build",
     "prepublishOnly": "yarn build",
     "local": "yarn build && yarn global add file:$PWD; aikido-api-client",
     "local-rm": "yarn global remove aikido-api-client",

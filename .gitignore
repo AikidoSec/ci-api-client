@@ -11,6 +11,10 @@
 # ide
 /.vscode
 
+# build output
+/lib
+/.build
+
 # misc
 .DS_Store
 .env.local

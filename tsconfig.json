@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "es2020",
-    "outDir": "lib",
+    "outDir": ".build",
     "rootDir": "src",
     "strict": true,
     "declaration": false, // TS types don't need to be exported for CLI tool
@@ -23,5 +23,5 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [".env", ".env.*", "src/*.ts", "src/**/*.ts"],
-  "exclude": ["lib", "dist", "node_modules"]
+  "exclude": [".build", "lib", "dist", "node_modules"]
 }
