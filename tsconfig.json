@@ -5,7 +5,7 @@
     "outDir": "lib",
     "rootDir": "src",
     "strict": true,
-    "declaration": true,
+    "declaration": false, // TS types don't need to be exported for CLI tool
 
     /* Use Node ECMAScript modules */
     "moduleResolution": "nodenext",
