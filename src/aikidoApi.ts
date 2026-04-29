@@ -39,6 +39,7 @@ export type TScanApiOptions = {
   version: string;
   is_release_gating?: boolean;
   base_branch?: string;
+  sla_mode?: boolean;
 };
 
 export type TStartScanResult = {

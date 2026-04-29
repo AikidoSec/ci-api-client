@@ -62,6 +62,7 @@ type TScanUserCliOptions = {
   minimumSeverityLevel?: string;
   pollInterval?: number;
   baseBranch?: string;
+  slaMode?: boolean;
 };
 
 async function cli(
@@ -114,7 +115,12 @@ async function cli(
     } else {
       loader?.fail('Scan completed with issues');
 
-      if (pollResult.new_issues_found) {
+      if (apiOptions.sla_mode) {
+        outputLog(
+          chalk.gray(
+            chalk.bold('Issues outside of SLA found: ') + pollResult.issues_outside_sla)
+        );
+      } else if (pollResult.new_issues_found) {
         outputLog(
           chalk.gray(
             chalk.bold('Open issues found: ') + pollResult.new_issues_found
@@ -275,6 +281,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   if (userCliOptions.baseBranch) {
     apiOptions.base_branch = userCliOptions.baseBranch;
   }
+  if (userCliOptions.slaMode) {
+    apiOptions.sla_mode = true;
+  }
   if (
     userCliOptions.pollInterval &&
     (isNaN(userCliOptions.pollInterval) || userCliOptions.pollInterval <= 0)
@@ -349,6 +358,10 @@ export const cliSetup = (program: Command) =>
         '--base-branch <branchname>',
         'Base branch for the release gated scan.'
       )
+    )
+    .option(
+      '--sla-mode',
+      'Let Aikido only fail only on open issues that have gone out of SLA.'
     )
     .description('Run a release scan of an Aikido repo.')
     .action(cli);
