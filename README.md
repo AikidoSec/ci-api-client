@@ -48,6 +48,7 @@ Options:
   --minimum-severity-level <level>  Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "LOW", "MEDIUM",
                                     "HIGH", "CRITICAL")
   --poll-interval [interval]        The poll interval when checking for an updated scan result (preset: 10)
+  --sla-mode                        Let Aikido only fail only on open issues that have gone out of SLA.
   -h, --help                        display help for command
 ```
 
@@ -129,10 +130,7 @@ If you are missing functionality in this cli tool, please feel free to add it. I
 # Other resources
 
 - [Aikido Official Website](https://aikido.dev)
-- [Aikido Github Actions Workflow](https://github.com/AikidoSec/github-actions-workflow)
-- [Aikido GitLab CI Integration](https://gitlab.com/aikido-security/gitlab-ci-integration)
-- [Aikido Bitbucket Pipe](https://bitbucket.org/aikido-production/bitbucket-pipe)
-- [Aikido Azure Pipelines](https://marketplace.visualstudio.com/items?itemName=AikidoSecurity.aikido-security-scanner)
+- [Aikido Docs](https://help.aikido.dev/)
 - [Aikido on Twitter](https://twitter.com/AikidoSecurity)
 
 
