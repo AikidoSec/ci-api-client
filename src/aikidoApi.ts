@@ -13,6 +13,10 @@ const getApiUrl = () => {
     return process.env.AIKIDO_ME_API || 'https://app.me.aikido.dev';
   }
 
+  if (apiKey.startsWith('AIK_CI_AU_')) {
+    return process.env.AIKIDO_AU_API || 'https://app.au.aikido.dev';
+  }
+
   return process.env.AIKIDO_API || 'https://app.aikido.dev';
 };
 const getApiHeaders = () => ({
