@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: open-source-releaser
     permissions:
       contents: read
       id-token: write
