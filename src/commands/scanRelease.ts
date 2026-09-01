@@ -122,7 +122,7 @@ async function cli(
 
   const onScanComplete = (pollResult: any) => {
     if (jsonOutput) {
-      console.log(
+      outputLog(
         JSON.stringify(
           {
             gate_passed: pollResult.gate_passed === true,
