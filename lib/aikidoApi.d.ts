@@ -30,8 +30,24 @@ export type TPollIsScanningResult = {
     secrets_scan_completed: boolean;
     sbom_scan_completed?: boolean;
 };
+export type TIssueSeverityBreakdown = {
+    critical: number;
+    high: number;
+    medium: number;
+    low: number;
+};
+export type TIssueBreakdown = {
+    sast: TIssueSeverityBreakdown;
+    sca: TIssueSeverityBreakdown;
+    iac: TIssueSeverityBreakdown;
+    secrets: TIssueSeverityBreakdown;
+    malware: TIssueSeverityBreakdown;
+    license: TIssueSeverityBreakdown;
+    code_quality: TIssueSeverityBreakdown;
+};
 type TPollScanCompletedOptions = {
     gate_passed: boolean;
+    issue_breakdown?: TIssueBreakdown;
 };
 type TPollScanFeatureBranchCompletedOptions = {
     new_issues_found: number;

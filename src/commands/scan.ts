@@ -51,6 +51,7 @@ type TScanArguments = {
 
 type TScanCliOptions = {
   pollInterval: number;
+  json: boolean;
 };
 
 type TScanUserCliOptions = {
@@ -63,6 +64,7 @@ type TScanUserCliOptions = {
   failOnIacScan?: boolean;
   minimumSeverityLevel?: string;
   pollInterval?: number;
+  json?: boolean;
 };
 
 async function cli(
@@ -84,13 +86,21 @@ async function cli(
 
   let loader: Ora | null;
   let pollCount: number = 1;
+  // when the json option is added, only add the json output. No spinners or other extra info
+  const jsonOutput = cliOptions.json;
 
   // Setup different scan() event handlers
   const onStart = () => {
+    if (jsonOutput) {
+      return;
+    }
     loader = startSpinner('Starting Aikido Security scan');
   };
 
   const onStartComplete = (startResult: TStartScanResult) => {
+    if (jsonOutput) {
+      return;
+    }
     loader?.succeed(
       `Aikido Security scan started (id: ${startResult.scan_id})`
     );
@@ -105,10 +115,31 @@ async function cli(
   };
 
   const onScanStart = () => {
+    if (jsonOutput) {
+      return;
+    }
     loader = startSpinner('Waiting for scan to complete');
   };
 
   const onScanComplete = (pollResult: any) => {
+    if (jsonOutput) {
+      console.log(
+        JSON.stringify(
+          {
+            gate_passed: pollResult.gate_passed === true,
+            issue_breakdown: pollResult.issue_breakdown,
+          },
+          null,
+          2
+        )
+      );
+
+      if (pollResult.gate_passed !== true) {
+        process.exit(10);
+      }
+      return;
+    }
+
     if (pollResult.gate_passed === true) {
       loader?.succeed('Scan completed, no new issues found');
       if (pollResult.diff_url) {
@@ -246,7 +277,7 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   // Version provided to the API corresponds with the version in package.json
   // of the cli client
   const apiOptions: TScanApiOptions = { version: '1.0.16' };
-  const cliOptions: TScanCliOptions = { pollInterval: 5 };
+  const cliOptions: TScanCliOptions = { pollInterval: 5, json: false };
 
   if (userCliOptions.pullRequestTitle) {
     apiOptions.pull_request_metadata = {
@@ -285,6 +316,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
     outputError('Please provide a valid poll interval');
   } else if (userCliOptions.pollInterval) {
     cliOptions.pollInterval = userCliOptions.pollInterval;
+  }
+  if (userCliOptions.json) {
+    cliOptions.json = true;
   }
 
   return { apiOptions, cliOptions };
@@ -374,6 +408,10 @@ export const cliSetup = (program: Command) =>
       )
         .preset(5)
         .argParser(parseFloat)
+    )
+    .option(
+      '--json',
+      'Output the scan result as JSON (gate_passed and issue_breakdown)'
     )
     .description('Run a scan of an Aikido repo.')
     .action(cli);
