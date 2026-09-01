@@ -135,7 +135,9 @@ async function cli(
       );
 
       if (pollResult.gate_passed !== true) {
-        process.exit(10);
+        // Don't process.exit() here: with piped stdout (CI) the JSON write
+        // may still be queued and a forced exit can truncate it.
+        process.exitCode = 10;
       }
       return;
     }
