@@ -14,7 +14,6 @@ import { getApiKey } from '../configuration.js';
 import {
   outputError,
   outputHttpError,
-  outputJson,
   outputLog,
   startSpinner,
 } from '../output.js';
@@ -52,7 +51,6 @@ type TScanArguments = {
 
 type TScanCliOptions = {
   pollInterval: number;
-  json: boolean;
 };
 
 type TScanUserCliOptions = {
@@ -65,7 +63,6 @@ type TScanUserCliOptions = {
   failOnIacScan?: boolean;
   minimumSeverityLevel?: string;
   pollInterval?: number;
-  json?: boolean;
 };
 
 async function cli(
@@ -87,12 +84,6 @@ async function cli(
 
   let loader: Ora | null;
   let pollCount: number = 1;
-  // when the json option is added, only output the json result.
-  // Disabling console output takes care of the spinners and other extra info
-  const jsonOutput = cliOptions.json;
-  if (jsonOutput) {
-    process.env.QUIET = true;
-  }
 
   // Setup different scan() event handlers
   const onStart = () => {
@@ -118,20 +109,6 @@ async function cli(
   };
 
   const onScanComplete = (pollResult: any) => {
-    if (jsonOutput) {
-      outputJson({
-        gate_passed: pollResult.gate_passed === true,
-        issue_breakdown: pollResult.issue_breakdown,
-      });
-
-      if (pollResult.gate_passed !== true) {
-        // Don't process.exit() here: with piped stdout (CI) the JSON write
-        // may still be queued and a forced exit can truncate it.
-        process.exitCode = 10;
-      }
-      return;
-    }
-
     if (pollResult.gate_passed === true) {
       loader?.succeed('Scan completed, no new issues found');
       if (pollResult.diff_url) {
@@ -269,7 +246,7 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   // Version provided to the API corresponds with the version in package.json
   // of the cli client
   const apiOptions: TScanApiOptions = { version: '1.0.16' };
-  const cliOptions: TScanCliOptions = { pollInterval: 5, json: false };
+  const cliOptions: TScanCliOptions = { pollInterval: 5 };
 
   if (userCliOptions.pullRequestTitle) {
     apiOptions.pull_request_metadata = {
@@ -308,9 +285,6 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
     outputError('Please provide a valid poll interval');
   } else if (userCliOptions.pollInterval) {
     cliOptions.pollInterval = userCliOptions.pollInterval;
-  }
-  if (userCliOptions.json) {
-    cliOptions.json = true;
   }
 
   return { apiOptions, cliOptions };
@@ -400,10 +374,6 @@ export const cliSetup = (program: Command) =>
       )
         .preset(5)
         .argParser(parseFloat)
-    )
-    .option(
-      '--json',
-      'Output the scan result as JSON (gate_passed and issue_breakdown)'
     )
     .description('Run a scan of an Aikido repo.')
     .action(cli);
