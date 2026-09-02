@@ -49,6 +49,7 @@ Options:
                                     "HIGH", "CRITICAL")
   --poll-interval [interval]        The poll interval when checking for an updated scan result (preset: 10)
   --sla-mode                        Let Aikido only fail only on open issues that have gone out of SLA.
+  --json                            Output the scan result as JSON (gate_passed and issue_breakdown)
   -h, --help                        display help for command
 ```
 
@@ -91,7 +92,7 @@ Options:
 
 The CLI will spawn a cloud-based scan and then report scan progress. It will exit with exitCode `0` if the scan was successfull (`gate_passed: true`). The process will exit with exitCode `10` if the scan was unsuccesfull (`gate_passed: false`). If anything else goes wrong (e.g. API unavailable, scanning unavailable, other unexpected issue) the process will exit with exitCode `1`.
 
-If you want the scan to run quietly (without output), you can add the `--quiet` option to the command.
+If you want the scan to run quietly (without output), you can add the `--quiet` option to the command. If you want machine-readable output instead, add `--json` to `scan-release`. That prints a JSON object with `gate_passed` and `issue_breakdown` and skips spinners and other extra info.
 
 Please note that the repository_id which you need to provide to the CLI is the unique ID of the Git provider you are using, not the ID of the repository in Aikido. You can also find this ID in Aikido, by going to the repository's detail page and clicking on the Git provider's icon in the header. Alternatively, you can pass the repository name as it is defined in Aikido.
 
