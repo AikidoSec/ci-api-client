@@ -14,6 +14,7 @@ import { getApiKey } from '../configuration.js';
 import {
   outputError,
   outputHttpError,
+  outputJson,
   outputLog,
   startSpinner,
 } from '../output.js';
@@ -86,21 +87,19 @@ async function cli(
 
   let loader: Ora | null;
   let pollCount: number = 1;
-  // when the json option is added, only add the json output. No spinners or other extra info
+  // when the json option is added, only output the json result.
+  // Disabling console output takes care of the spinners and other extra info
   const jsonOutput = cliOptions.json;
+  if (jsonOutput) {
+    process.env.QUIET = true;
+  }
 
   // Setup different scan() event handlers
   const onStart = () => {
-    if (jsonOutput) {
-      return;
-    }
     loader = startSpinner('Starting Aikido Security scan');
   };
 
   const onStartComplete = (startResult: TStartScanResult) => {
-    if (jsonOutput) {
-      return;
-    }
     loader?.succeed(
       `Aikido Security scan started (id: ${startResult.scan_id})`
     );
@@ -115,24 +114,15 @@ async function cli(
   };
 
   const onScanStart = () => {
-    if (jsonOutput) {
-      return;
-    }
     loader = startSpinner('Waiting for scan to complete');
   };
 
   const onScanComplete = (pollResult: any) => {
     if (jsonOutput) {
-      outputLog(
-        JSON.stringify(
-          {
-            gate_passed: pollResult.gate_passed === true,
-            issue_breakdown: pollResult.issue_breakdown,
-          },
-          null,
-          2
-        )
-      );
+      outputJson({
+        gate_passed: pollResult.gate_passed === true,
+        issue_breakdown: pollResult.issue_breakdown,
+      });
 
       if (pollResult.gate_passed !== true) {
         // Don't process.exit() here: with piped stdout (CI) the JSON write

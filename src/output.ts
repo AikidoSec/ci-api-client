@@ -10,6 +10,13 @@ export const outputLog = (message: string): void => {
   }
 };
 
+// Output a machine readable result
+// This ignores the global "quiet" option: it is the output that was asked
+// for, not human readable progress information
+export const outputJson = (data: unknown): void => {
+  console.log(JSON.stringify(data, null, 2));
+};
+
 // Output some message, var, .. if --debug was provided
 export const outputDebug = (variable: any): void => {
   if (process.env.CLI_DEBUG == true || process.env.CLI_DEBUG == 'true') {
