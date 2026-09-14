@@ -61,6 +61,7 @@ type TScanUserCliOptions = {
   failOnSastScan?: boolean;
   failOnSecretsScan?: boolean;
   failOnIacScan?: boolean;
+  failOnLicenseScan?: boolean;
   minimumSeverityLevel?: string;
   pollInterval?: number;
 };
@@ -275,6 +276,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   if (userCliOptions.failOnSecretsScan != undefined) {
     apiOptions.fail_on_secrets_scan = userCliOptions.failOnSecretsScan;
   }
+  if (userCliOptions.failOnLicenseScan != undefined) {
+    apiOptions.fail_on_license_scan = userCliOptions.failOnLicenseScan;
+  }
   if (userCliOptions.minimumSeverityLevel) {
     apiOptions.minimum_severity = userCliOptions.minimumSeverityLevel;
   }
@@ -361,6 +365,7 @@ export const cliSetup = (program: Command) =>
       '--fail-on-secrets-scan',
       'Let Aikido fail when new exposed secrets have been detected...'
     )
+    .addOption(new Option('--fail-on-license-scan').hideHelp())
     .addOption(
       new Option(
         '--minimum-severity-level <level>',
