@@ -53,6 +53,30 @@ Options:
   -h, --help                        display help for command
 ```
 
+## Use case: code coverage
+
+The example below shows how to use the `upload-coverage` command. The use case here is to upload LCOV or Cobertura coverage reports from your CI pipeline so Aikido can track coverage per commit and branch.
+
+```sh
+$ aikido-api-client upload-coverage \
+    --repo-name <owner/repo> \
+    --commit-sha <commit_sha> \
+    --branch-name <branch_name> \
+    --repository-id <repository_id> \
+    --file-paths coverage/lcov.info
+```
+```
+Usage: Aikido API Client upload-coverage [options]
+Upload LCOV or Cobertura coverage reports to Aikido (with repository_source_paths and EOF metadata).
+Options:
+  -r, --repo-name <reponame>           Repository name as owner/repo (e.g. org/my-repo)
+  -c, --commit-sha <commitsha>         The commit SHA for this CI run
+  -b, --branch-name <branchname>       The branch name for this CI run
+  -f, --file-paths <paths...>          Path(s) to LCOV or Cobertura coverage report(s). Format is detected from each filename.
+  -ri, --repository-id <repositoryid>  The scm repository id
+  -h, --help                           display help for command
+```
+
 ## Use case: pull request checks & gating
 
 The example below shows how to use the 'scan' command. The use case here is to add a red/green check to a pull request based on the difference in files (head vs base commit).
