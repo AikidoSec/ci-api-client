@@ -50,7 +50,20 @@ export async function collectUploadPayload(
     validateFilePath(inputPath);
     
     const absolutePath = path.resolve(inputPath);
-    const content = await fs.readFile(absolutePath, 'utf8');
+    const stats = await fs.lstat(absolutePath);
+    const realPath = await fs.realpath(absolutePath);
+    const relativePath = path.relative(repositoryRoot, realPath);
+    if (
+      stats.isSymbolicLink() ||
+      !stats.isFile() ||
+      relativePath.startsWith('..') ||
+      path.isAbsolute(relativePath)
+    ) {
+      throw new Error(
+        `Coverage file must be a regular file inside the repository: ${inputPath}`
+      );
+    }
+    const content = await fs.readFile(realPath, 'utf8');
     const format = detectFormatFromFilename(inputPath);
 
     for (const sourcePath of extractCoveredSourcePaths(content, format, repositoryRoot)) {
