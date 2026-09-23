@@ -24,6 +24,7 @@ async function cli(options: TUploadCoverageUserCliOptions) {
   if (!apiKey) {
     outputError('Please set an api key using: aikido-api-client apikey <key>');
     return;
+    return;
   }
 
   const filePaths = normalizeFilePaths(options.filePaths);
