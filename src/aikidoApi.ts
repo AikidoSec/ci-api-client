@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { gzipSync } from 'node:zlib';
 import { getApiKey } from './configuration.js';
 import { outputDebug } from './output.js';
 
@@ -180,6 +181,64 @@ export async function uploadCustomScanResult(
 
   outputDebug(`API request: ${requestUrl}`);
   outputDebug(requestConfig);
+
+  const resultData = (await axios(requestUrl, requestConfig)).data;
+  outputDebug(resultData);
+
+  return resultData;
+}
+// #endregion
+
+// #region Upload code coverage
+export type TUploadCodeCoverageFile = {
+  filename: string;
+  format: 'lcov' | 'cobertura';
+  content: string;
+};
+
+export type TUploadCodeCoverageOptions = {
+  repository_id: string | number;
+  repo_name: string;
+  commit_sha: string;
+  branch_name: string;
+  repository_source_paths: string[];
+  eof: Record<string, number>;
+  files: TUploadCodeCoverageFile[];
+};
+
+
+export async function uploadCodeCoverage(data: TUploadCodeCoverageOptions){
+  const requestUrl = `${getApiUrl()}/api/integrations/continuous_integration/scan/code_coverage`;
+  const requestConfig = {
+    method: 'POST',
+    data: {
+      repository_id: data.repository_id,
+      repo_name: data.repo_name,
+      commit_sha: data.commit_sha,
+      branch_name: data.branch_name,
+      repository_source_paths: data.repository_source_paths,
+      eof: data.eof,
+      files: data.files.map((file) => ({
+        filename: file.filename,
+        format: file.format,
+        content: gzipSync(file.content).toString('base64'),
+      })),
+    },
+    headers: getApiHeaders(),
+  };
+
+  outputDebug(`API request: ${requestUrl}`);
+  outputDebug({
+    ...requestConfig,
+    data: {
+      ...requestConfig.data,
+      files: requestConfig.data.files.map((file) => ({
+        filename: file.filename,
+        format: file.format,
+        content: `[base64 gzip, ${file.content.length} chars]`,
+      })),
+    },
+  });
 
   const resultData = (await axios(requestUrl, requestConfig)).data;
   outputDebug(resultData);

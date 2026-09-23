@@ -111,7 +111,26 @@ $ aikido-api-client upload --repository-id <repository_id> --type checkov --file
 $ aikido-api-client help upload
 ```
 
-For more information about these parameters, please refer to `aikido-api-client help`, `aikido-api-client help scan`, `aikido-api-client help scan-release` or `aikido-api-client help upload`, or [the public ci api page](https://aikido-dev.notion.site/aikido-dev/Aikido-CI-API-78d318b5f5f7477ab072e12f94b21374).
+Uploading code coverage (LCOV or Cobertura):
+
+```sh
+$ aikido-api-client upload-coverage \
+    --repo-name <owner/repo> \
+    --commit-sha <commit_sha> \
+    --branch-name <branch_name> \
+    --file-paths coverage/lcov.info
+
+# Multiple reports (mixed LCOV / Cobertura supported)
+$ aikido-api-client upload-coverage -r <owner/repo> -c <commit_sha> -b <branch_name> \
+    -f packages/a/coverage/lcov.info packages/b/coverage/cobertura.xml
+
+# For more options and combinations, check the help output
+$ aikido-api-client help upload-coverage
+```
+
+This matches the payload shape used by the [Aikido code coverage GitHub Action](https://github.com/AikidoSec/code-coverage-github-action): reports are uploaded as-is (gzip + base64), together with `repository_source_paths` and an EOF map for covered source files.
+
+For more information about these parameters, please refer to `aikido-api-client help`, `aikido-api-client help scan`, `aikido-api-client help scan-release`, `aikido-api-client help upload`, `aikido-api-client help upload-coverage`, or [the public ci api page](https://aikido-dev.notion.site/aikido-dev/Aikido-CI-API-78d318b5f5f7477ab072e12f94b21374).
 
 ## Help & contributing
 
