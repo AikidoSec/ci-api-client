@@ -79,4 +79,19 @@ export type TUploadResult = {
     success: number;
 };
 export declare function uploadCustomScanResult(data: TUploadApiOptions): Promise<TUploadResult>;
+export type TUploadCodeCoverageFile = {
+    filename: string;
+    format: 'lcov' | 'cobertura';
+    content: string;
+};
+export type TUploadCodeCoverageOptions = {
+    repository_id: string | number;
+    repo_name: string;
+    commit_sha: string;
+    branch_name: string;
+    repository_source_paths: string[];
+    eof: Record<string, number>;
+    files: TUploadCodeCoverageFile[];
+};
+export declare function uploadCodeCoverage(data: TUploadCodeCoverageOptions): Promise<any>;
 export {};
