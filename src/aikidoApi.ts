@@ -41,6 +41,7 @@ export type TScanApiOptions = {
   fail_on_secrets_scan?: boolean;
   fail_on_license_scan?: boolean;
   minimum_severity?: string;
+  minimum_license_severity?: string;
   version: string;
   is_release_gating?: boolean;
   base_branch?: string;

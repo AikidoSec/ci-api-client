@@ -63,6 +63,7 @@ type TScanUserCliOptions = {
   failOnIacScan?: boolean;
   failOnLicenseScan?: boolean;
   minimumSeverityLevel?: string;
+  minimumLicenseSeverityLevel?: string;
   pollInterval?: number;
   baseBranch?: string;
   slaMode?: boolean;
@@ -302,9 +303,13 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   }
   if (userCliOptions.failOnLicenseScan != undefined) {
     apiOptions.fail_on_license_scan = userCliOptions.failOnLicenseScan;
+    apiOptions.minimum_license_severity = 'HIGH'
   }
   if (userCliOptions.minimumSeverityLevel) {
     apiOptions.minimum_severity = userCliOptions.minimumSeverityLevel;
+  }
+  if (userCliOptions.minimumLicenseSeverityLevel) {
+    apiOptions.minimum_license_severity = userCliOptions.minimumLicenseSeverityLevel;
   }
   if (userCliOptions.baseBranch) {
     apiOptions.base_branch = userCliOptions.baseBranch;
@@ -370,7 +375,14 @@ export const cliSetup = (program: Command) =>
       '--fail-on-secrets-scan',
       'Let Aikido fail when new exposed secrets have been detected...'
     )
-    .addOption(new Option('--fail-on-license-scan').hideHelp())
+    .addOption(new Option('--fail-on-license-scan'))
+    .addOption(
+      new Option(
+        '--minimum-license-severity-level <level>',
+        'Set the minimum license severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL.'
+      )
+        .choices(['HIGH', 'CRITICAL'])
+    )
     .addOption(
       new Option(
         '--minimum-severity-level <level>',
