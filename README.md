@@ -54,41 +54,29 @@ Options:
   -h, --help                        display help for command
 ```
 
-## Use case: pull request checks & gating
+## Use case: code coverage
 
-The example below shows how to use the 'scan' command. The use case here is to add a red/green check to a pull request based on the difference in files (head vs base commit).
+The example below shows how to use the `upload-coverage` command. The use case here is to upload LCOV or Cobertura coverage reports from your CI pipeline so Aikido can track coverage per commit and branch.
 
 ```sh
-$ aikido-api-client scan <repository_id or repository_name> <base_commit_id> <head_commit_id>
+$ aikido-api-client upload-coverage \
+    --repo-name <owner/repo> \
+    --commit-sha <commit_sha> \
+    --branch-name <branch_name> \
+    --repository-id <repository_id> \
+    --file-paths coverage/lcov.info
 ```
 ```
-Usage: Aikido API Client scan [options] <repository_id> <base_commit_id> <head_commit_id> [branch_name]
-Run a scan of an Aikido repo.
-Arguments:
-  repository_id                          The internal GitHub/Gitlab/Bitbucket/.. repository id you want to scan.
-  base_commit_id                         The base commit of the code you want to scan (e.g. the commit where you branched from for your PR or the
-                                         initial commit of your repo)
-  head_commit_id                         The latest commit you want to include in your scan (e.g. the latest commit id of your pull request)
-  branch_name                            The branch name (default: "main")
+Usage: Aikido API Client upload-coverage [options]
+Upload LCOV or Cobertura coverage reports to Aikido (with repository_source_paths and EOF metadata).
 Options:
-  --pull-request-title <title>           Your pull request title
-  --pull-request-url <url>               Your pull request URL
-  --self-managed-scanners <scanners...>  Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "checkov",
-                                         "json-sbom")
-  --expected-amount-json-sboms <amount>  The expected amount of json sbombs
-  --no-fail-on-dependency-scan           Don't fail when scanning depedencies. Default is to fail on new CVE
-  --fail-on-sast-scan                    Let Aikido fail when new static code analysis issues have been detected
-  --fail-on-iac-scan                     Let Aikido fail when new infrastructure as code issues have been detected
-  --fail-on-secrets-scan                 Let Aikido fail when new exposed secrets have been detected
-  --fail-on-malware-scan                 Let Aikido fail when new malware issues have been detected
-  --minimum-severity-level <level>       Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "LOW",
-                                         "MEDIUM", "HIGH", "CRITICAL")
-  --poll-interval [interval]             The poll interval when checking for an updated scan result (preset: 5)
-  --base-branch <branchname>             Optional: base branch for the release gated scan.
-  -h, --help                             display help for command
+  -r, --repo-name <reponame>           Repository name as owner/repo (e.g. org/my-repo)
+  -c, --commit-sha <commitsha>         The commit SHA for this CI run
+  -b, --branch-name <branchname>       The branch name for this CI run
+  -f, --file-paths <paths...>          Path(s) to LCOV or Cobertura coverage report(s). Format is detected from each filename.
+  -ri, --repository-id <repositoryid>  The scm repository id
+  -h, --help                           display help for command
 ```
-
-
 
 ## How it works
 
