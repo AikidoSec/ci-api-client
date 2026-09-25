@@ -23,7 +23,9 @@ type TScanUserCliOptions = {
     failOnSastScan?: boolean;
     failOnSecretsScan?: boolean;
     failOnIacScan?: boolean;
+    failOnLicenseScan?: boolean;
     minimumSeverityLevel?: string;
+    minimumLicenseSeverityLevel?: string;
     pollInterval?: number;
 };
 declare function cli(repoId: string, baseCommitId: string, headCommitId: string, branchName: string, options: TScanUserCliOptions, command: string): Promise<void>;
