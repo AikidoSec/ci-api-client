@@ -59,7 +59,6 @@ The example below shows how to use the `upload-coverage` command. The use case h
 
 ```sh
 $ aikido-api-client upload-coverage \
-    --repo-name <owner/repo> \
     --commit-sha <commit_sha> \
     --branch-name <branch_name> \
     --repository-id <repository_id> \
@@ -69,7 +68,6 @@ $ aikido-api-client upload-coverage \
 Usage: Aikido API Client upload-coverage [options]
 Upload LCOV or Cobertura coverage reports to Aikido (with repository_source_paths and EOF metadata).
 Options:
-  -r, --repo-name <reponame>           Repository name as owner/repo (e.g. org/my-repo)
   -c, --commit-sha <commitsha>         The commit SHA for this CI run
   -b, --branch-name <branchname>       The branch name for this CI run
   -f, --file-paths <paths...>          Path(s) to LCOV or Cobertura coverage report(s). Format is detected from each filename.

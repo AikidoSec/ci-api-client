@@ -11,7 +11,6 @@ import {
 } from '../output.js';
 
 type TUploadCoverageUserCliOptions = {
-  repoName: string;
   commitSha: string;
   branchName: string;
   filePaths: string[];
@@ -60,7 +59,6 @@ async function cli(options: TUploadCoverageUserCliOptions) {
   try {
     await uploadCodeCoverage({
       repository_id: options.repositoryId,
-      repo_name: options.repoName,
       commit_sha: options.commitSha,
       branch_name: options.branchName,
       repository_source_paths: payload.repository_source_paths,
@@ -87,10 +85,6 @@ const normalizeFilePaths = (filePaths: string[]): string[] =>
 export const cliSetup = (program: Command) =>
   program
     .command('upload-coverage')
-    .requiredOption(
-      '-r, --repo-name <reponame>',
-      'Repository name as owner/repo (e.g. org/my-repo)'
-    )
     .requiredOption(
       '-c, --commit-sha <commitsha>',
       'The commit SHA for this CI run'

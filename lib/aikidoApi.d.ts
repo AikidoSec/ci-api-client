@@ -86,7 +86,6 @@ export type TUploadCodeCoverageFile = {
 };
 export type TUploadCodeCoverageOptions = {
     repository_id: string | number;
-    repo_name: string;
     commit_sha: string;
     branch_name: string;
     repository_source_paths: string[];
