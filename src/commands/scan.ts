@@ -61,7 +61,7 @@ type TScanUserCliOptions = {
   failOnSastScan?: boolean;
   failOnSecretsScan?: boolean;
   failOnIacScan?: boolean;
-  minimumLicenseSeverityLevel?: string;
+  minimumSeverityLevel?: string;
   pollInterval?: number;
 };
 
@@ -275,8 +275,8 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   if (userCliOptions.failOnSecretsScan != undefined) {
     apiOptions.fail_on_secrets_scan = userCliOptions.failOnSecretsScan;
   }
-  if (userCliOptions.minimumLicenseSeverityLevel) {
-    apiOptions.minimum_license_severity = userCliOptions.minimumLicenseSeverityLevel;
+  if (userCliOptions.minimumSeverityLevel) {
+    apiOptions.minimum_severity = userCliOptions.minimumSeverityLevel;
   }
   if (
     userCliOptions.pollInterval &&
