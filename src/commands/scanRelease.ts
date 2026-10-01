@@ -303,7 +303,6 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   }
   if (userCliOptions.failOnLicenseScan != undefined) {
     apiOptions.fail_on_license_scan = userCliOptions.failOnLicenseScan;
-    apiOptions.minimum_license_severity = 'HIGH'
   }
   if (userCliOptions.minimumSeverityLevel) {
     apiOptions.minimum_severity = userCliOptions.minimumSeverityLevel;
@@ -382,6 +381,7 @@ export const cliSetup = (program: Command) =>
         'Set the minimum license severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL.'
       )
         .choices(['HIGH', 'CRITICAL'])
+        .default('HIGH')
     )
     .addOption(
       new Option(
