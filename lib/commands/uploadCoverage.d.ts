@@ -1,6 +1,5 @@
 import { Command } from 'commander';
 type TUploadCoverageUserCliOptions = {
-    repoName: string;
     commitSha: string;
     branchName: string;
     filePaths: string[];
