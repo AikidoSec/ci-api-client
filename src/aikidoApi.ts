@@ -198,7 +198,6 @@ export type TUploadCodeCoverageFile = {
 
 export type TUploadCodeCoverageOptions = {
   repository_id: string | number;
-  repo_name: string;
   commit_sha: string;
   branch_name: string;
   repository_source_paths: string[];
@@ -213,7 +212,6 @@ export async function uploadCodeCoverage(data: TUploadCodeCoverageOptions){
     method: 'POST',
     data: {
       repository_id: data.repository_id,
-      repo_name: data.repo_name,
       commit_sha: data.commit_sha,
       branch_name: data.branch_name,
       repository_source_paths: data.repository_source_paths,
