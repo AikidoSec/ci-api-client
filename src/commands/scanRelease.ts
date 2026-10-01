@@ -378,7 +378,7 @@ export const cliSetup = (program: Command) =>
     .addOption(
       new Option(
         '--minimum-license-severity-level <level>',
-        'Set the minimum license severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL.'
+        'Set the minimum license severity level. Accepted options are: HIGH and CRITICAL. This lives behind a feature flag, contact Aikido to enable it.'
       )
         .choices(['HIGH', 'CRITICAL'])
         .default('HIGH')
