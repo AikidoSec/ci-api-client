@@ -110,7 +110,8 @@ async function cli(
 
   const onScanComplete = (pollResult: any) => {
     if (pollResult.gate_passed === true) {
-      loader?.succeed('Scan completed, no new issues found');
+      const minimum_severity = apiOptions.minimum_severity?.toLowerCase() || 'critical';
+      loader?.succeed(`Scan completed, no open issues with ${minimum_severity} severity or higher found`);
       if (pollResult.diff_url) {
         outputLog(chalk.gray(`* Diff url: ${pollResult.diff_url}`));
       }
