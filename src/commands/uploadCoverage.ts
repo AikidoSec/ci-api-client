@@ -9,6 +9,7 @@ import {
   outputLog,
   startSpinner,
 } from '../output.js';
+import { resolveInputFilePatterns } from '../codeCoverage/resolveInputFilePattern.js';
 
 type TUploadCoverageUserCliOptions = {
   commitSha: string;
@@ -25,7 +26,14 @@ async function cli(options: TUploadCoverageUserCliOptions) {
     return;
   }
 
-  const filePaths = normalizeFilePaths(options.filePaths);
+  let filePaths: string[];
+  try {
+    filePaths = await resolveInputFilePatterns(normalizeFilePaths(options.filePaths));
+  } catch (error) {
+    outputError(error instanceof Error ? error.message : String(error));
+    return;
+  }
+
   if (filePaths.length === 0) {
     outputError(
       'No code coverage file(s) provided. Specify at least one path with --file-paths.'
@@ -94,7 +102,7 @@ export const cliSetup = (program: Command) =>
     )
     .requiredOption(
       '-f, --file-paths <paths...>',
-      'Path(s) to LCOV or Cobertura coverage report(s). Format is detected from each filename.'
+      'Path(s) or glob pattern(s) to LCOV or Cobertura coverage report(s). Format is detected from each filename.'
     )
     .requiredOption(
       '-ri, --repository-id <repositoryid>',

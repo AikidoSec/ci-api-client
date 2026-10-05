@@ -55,7 +55,7 @@ Options:
 
 ## Use case: code coverage
 
-The example below shows how to use the `upload-coverage` command. The use case here is to upload LCOV or Cobertura coverage reports from your CI pipeline so Aikido can track coverage per commit and branch.
+The example below shows how to use the `upload-coverage` command. The use case here is to upload LCOV or Cobertura coverage reports from your CI pipeline so Aikido can track coverage per commit and branch. `--file-paths` accepts one or more literal paths or glob patterns (for example `coverage/**/lcov.info`). Absolute paths and `..` segments are not allowed.
 
 ```sh
 $ aikido-api-client upload-coverage \
@@ -63,6 +63,13 @@ $ aikido-api-client upload-coverage \
     --branch-name <branch_name> \
     --repository-id <repository_id> \
     --file-paths coverage/lcov.info
+
+# Or match multiple reports with a glob:
+$ aikido-api-client upload-coverage \
+    --commit-sha <commit_sha> \
+    --branch-name <branch_name> \
+    --repository-id <repository_id> \
+    --file-paths 'coverage/**/*.info' 'coverage/**/cobertura.xml'
 ```
 ```
 Usage: Aikido API Client upload-coverage [options]
@@ -70,7 +77,7 @@ Upload LCOV or Cobertura coverage reports to Aikido (with repository_source_path
 Options:
   -c, --commit-sha <commitsha>         The commit SHA for this CI run
   -b, --branch-name <branchname>       The branch name for this CI run
-  -f, --file-paths <paths...>          Path(s) to LCOV or Cobertura coverage report(s). Format is detected from each filename.
+  -f, --file-paths <paths...>          Path(s) or glob pattern(s) to LCOV or Cobertura coverage report(s). Format is detected from each filename.
   -ri, --repository-id <repositoryid>  The scm repository id
   -h, --help                           display help for command
 ```
