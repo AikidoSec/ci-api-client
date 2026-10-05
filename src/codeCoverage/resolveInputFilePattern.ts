@@ -1,4 +1,4 @@
-import { glob } from 'fast-glob';
+import glob from 'fast-glob';
 import { normalizePathSeparators, validateFilePath } from './paths.js';
 
 /**
@@ -10,6 +10,11 @@ export async function resolveInputFilePatterns(patterns: string[]) {
 
   for (const pattern of patterns) {
     validateFilePath(pattern);
+
+    if(!glob.isDynamicPattern(pattern)) {
+      resolvedPaths.push(pattern);
+      continue;
+    }
 
     const matches = await glob(pattern, {
       onlyFiles: true,
