@@ -12,7 +12,7 @@ export async function resolveInputFilePatterns(patterns: string[]) {
     validateFilePath(pattern);
 
     if(!glob.isDynamicPattern(pattern)) {
-      resolvedPaths.push(pattern);
+      resolvedPaths.push(normalizePathSeparators(pattern));
       continue;
     }
 
