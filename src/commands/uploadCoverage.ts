@@ -76,9 +76,15 @@ async function cli(options: TUploadCoverageUserCliOptions) {
     
     loader?.succeed('Code coverage upload completed');
     process.exit(0);
-  } catch (error) {
+  } catch (error: any) {
     loader?.fail();
-    outputHttpError(error as any);
+
+    if (error.response?.data?.reason_phrase) {
+      outputError(error.response.data.reason_phrase);
+    } else {
+      outputHttpError(error);
+    }
+
     process.exit(1);
   }
 }
