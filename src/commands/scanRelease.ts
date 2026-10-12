@@ -61,6 +61,7 @@ type TScanUserCliOptions = {
   failOnSastScan?: boolean;
   failOnSecretsScan?: boolean;
   failOnIacScan?: boolean;
+  failOnMalwareScan?: boolean;
   minimumSeverityLevel?: string;
   pollInterval?: number;
   baseBranch?: string;
@@ -299,6 +300,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   if (userCliOptions.failOnSecretsScan != undefined) {
     apiOptions.fail_on_secrets_scan = userCliOptions.failOnSecretsScan;
   }
+  if (userCliOptions.failOnMalwareScan != undefined) {
+    apiOptions.fail_on_malware_scan = userCliOptions.failOnMalwareScan;
+  }
   if (userCliOptions.minimumSeverityLevel) {
     apiOptions.minimum_severity = userCliOptions.minimumSeverityLevel;
   }
@@ -365,6 +369,10 @@ export const cliSetup = (program: Command) =>
     .option(
       '--fail-on-secrets-scan',
       'Let Aikido fail when new exposed secrets have been detected...'
+    )
+    .option(
+      '--fail-on-malware-scan',
+      'Let Aikido fail when new malware issues have been detected...'
     )
     .addOption(
       new Option(

@@ -40,6 +40,7 @@ export type TScanApiOptions = {
   fail_on_sast_scan?: boolean;
   fail_on_iac_scan?: boolean;
   fail_on_secrets_scan?: boolean;
+  fail_on_malware_scan?: boolean;
   minimum_severity?: string;
   version: string;
   is_release_gating?: boolean;
