@@ -45,11 +45,11 @@ export const outputHttpError = (axiosError: AxiosError): void => {
       switch (axiosError.response.status) {
         case 401:
           return outputError(
-            `${statusStr}: The provided api key is most likely no longer valid and has been rotated or revoked. Visit https://app.aikido.dev/settings/integrations/continuous-integration to generate a new key.`
+            `${statusStr}: Authentication failed. Check your API key, or for OIDC that the repo is connected to Aikido and the job has \`permissions: id-token: write\`. Generate a new API key at https://app.aikido.dev/settings/integrations/continuous-integration`
           );
         case 403:
           return outputError(
-            `${statusStr}: Could not authenticate with the Aikido API. Please verify your Aikdio API key.`
+            `${statusStr}: Could not authenticate with the Aikido API. Verify your API key or OIDC setup (\`--region\` must match your workspace).`
           );
         case 500:
           return outputError(

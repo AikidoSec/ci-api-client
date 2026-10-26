@@ -1,29 +1,7 @@
 import axios from 'axios';
 import { gzipSync } from 'node:zlib';
-import { getApiKey } from './configuration.js';
+import { resolveAuth } from './auth/auth.js';
 import { outputDebug } from './output.js';
-
-const getApiUrl = () => {
-  const apiKey = getApiKey();
-
-  if (apiKey.startsWith('AIK_CI_US_')) {
-    return process.env.AIKIDO_US_API || 'https://app.us.aikido.dev';
-  }
-
-  if (apiKey.startsWith('AIK_CI_ME_')) {
-    return process.env.AIKIDO_ME_API || 'https://app.me.aikido.dev';
-  }
-
-  if (apiKey.startsWith('AIK_CI_AU_')) {
-    return process.env.AIKIDO_AU_API || 'https://app.au.aikido.dev';
-  }
-
-  return process.env.AIKIDO_API || 'https://app.aikido.dev';
-};
-const getApiHeaders = () => ({
-  'Content-Type': 'application/json',
-  'X-AIK-API-SECRET': getApiKey(),
-});
 
 // #region Scan start
 export type TScanApiOptions = {
@@ -56,12 +34,16 @@ export type TStartScanResult = {
 export async function startScan(
   data: TScanApiOptions
 ): Promise<TStartScanResult> {
-  const requestUrl = `${getApiUrl()}/api/integrations/continuous_integration/scan/repository`;
+  const auth = await resolveAuth();
+
+  const oidcOrApiKeyUrlSegment = auth.withOidc ? 'oidc_continuous_integration' : 'continuous_integration';
+  const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/repository`;
   const requestConfig = {
     method: 'POST',
     data,
-    headers: getApiHeaders(),
+    headers: auth.headers,
   };
+
 
   outputDebug(`API request: ${requestUrl}`);
   outputDebug(requestConfig);
@@ -134,11 +116,14 @@ export async function pollScanStatus(
   | TPollScanFeatureBranchCompletedResult
   | TPollScanCompletedDefaultBranchResult
 > {
-  const requestUrl = `${getApiUrl()}/api/integrations/continuous_integration/scan/repository`;
+  const auth = await resolveAuth();
+
+  const oidcOrApiKeyUrlSegment = auth.withOidc ? 'oidc_continuous_integration' : 'continuous_integration';
+  const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/repository`;
   const requestConfig = {
     method: 'GET',
     params: { scan_id: scanId },
-    headers: getApiHeaders(),
+    headers: auth.headers,
   };
 
   outputDebug(`API request: ${requestUrl}`);
@@ -172,11 +157,14 @@ export type TUploadResult = {
 export async function uploadCustomScanResult(
   data: TUploadApiOptions
 ): Promise<TUploadResult> {
-  const requestUrl = `${getApiUrl()}/api/integrations/continuous_integration/scan/custom`;
+  const auth = await resolveAuth();
+
+  const oidcOrApiKeyUrlSegment = auth.withOidc ? 'oidc_continuous_integration' : 'continuous_integration';
+  const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/custom`;
   const requestConfig = {
     method: 'POST',
     data,
-    headers: getApiHeaders(),
+    headers: auth.headers,
   };
 
   outputDebug(`API request: ${requestUrl}`);
@@ -206,8 +194,11 @@ export type TUploadCodeCoverageOptions = {
 };
 
 
-export async function uploadCodeCoverage(data: TUploadCodeCoverageOptions){
-  const requestUrl = `${getApiUrl()}/api/integrations/continuous_integration/scan/code_coverage`;
+export async function uploadCodeCoverage(data: TUploadCodeCoverageOptions) {
+  const auth = await resolveAuth();
+  
+  const oidcOrApiKeyUrlSegment = auth.withOidc ? 'oidc_continuous_integration' : 'continuous_integration';
+  const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/code_coverage`;
   const requestConfig = {
     method: 'POST',
     data: {
@@ -222,7 +213,7 @@ export async function uploadCodeCoverage(data: TUploadCodeCoverageOptions){
         content: gzipSync(file.content).toString('base64'),
       })),
     },
-    headers: getApiHeaders(),
+    headers: auth.headers,
   };
 
   outputDebug(`API request: ${requestUrl}`);

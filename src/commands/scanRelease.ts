@@ -10,7 +10,6 @@ import {
   pollScanStatus,
   startScan,
 } from '../aikidoApi.js';
-import { getApiKey } from '../configuration.js';
 import {
   outputError,
   outputHttpError,
@@ -74,12 +73,6 @@ async function cli(
   options: TScanUserCliOptions,
   command: string
 ) {
-  const apiKey = getApiKey();
-
-  if (!apiKey) {
-    outputError('Please set an api key using: aikido-cli-client apikey <key>');
-  }
-
   // Process command options and group them into apiOptions hash
   const { apiOptions, cliOptions } = parseCliOptions(options);
 
@@ -269,7 +262,7 @@ export const scan = async ({
 const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   // Version provided to the API corresponds with the version in package.json
   // of the cli client
-  const apiOptions: TScanApiOptions = { version: '1.0.22' };
+  const apiOptions: TScanApiOptions = { version: '1.0.23' };
   const cliOptions: TScanCliOptions = { pollInterval: 10, json: false };
 
   if (userCliOptions.pullRequestTitle) {

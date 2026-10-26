@@ -21,7 +21,7 @@ program
   .description(
     'CLI api client to easily integrate the Aikido public CI API into custom deploy scripts'
   )
-  .version('1.0.22');
+  .version('1.0.23');
 
 // Load in all app commands and set them up in the `program` instance
 apiKey.cliSetup(program);
@@ -66,6 +66,11 @@ program
 program.option(
   '--apikey <apikey>',
   'Use a cli apikey instead of reading the key from the configuration'
+);
+
+program.option(
+  '--region <region>',
+  'Aikido region (eu, us, au, us-gov, me). Default: eu for OIDC; API keys usually encode the region'
 );
 
 program.configureOutput({
