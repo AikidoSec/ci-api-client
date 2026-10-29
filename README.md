@@ -46,6 +46,8 @@ Options:
   --fail-on-iac-scan                Let Aikido fail when new infrastructure as code issues have been detected
   --fail-on-secrets-scan            Let Aikido fail when new exposed secrets have been detected
   --fail-on-license-scan            Let Aikido fail when new license issues have been detected. Only available on paid plans.
+  --minimum-license-severity-level <level>  Set the minimum license severity level. Accepted options are: HIGH and CRITICAL. This lives behind a
+                                            feature flag, contact Aikido to enable it. (choices: "HIGH", "CRITICAL", default: "HIGH")
   --minimum-severity-level <level>  Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "LOW", "MEDIUM",
                                     "HIGH", "CRITICAL")
   --poll-interval [interval]        The poll interval when checking for an updated scan result (preset: 10)
