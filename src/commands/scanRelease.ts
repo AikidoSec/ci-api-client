@@ -374,7 +374,10 @@ export const cliSetup = (program: Command) =>
       '--fail-on-secrets-scan',
       'Let Aikido fail when new exposed secrets have been detected...'
     )
-    .addOption(new Option('--fail-on-license-scan'))
+    .option(
+      '--fail-on-license-scan',
+      'Let Aikido fail when new license issues have been detected. Only available on paid plans.'
+    )
     .addOption(
       new Option(
         '--minimum-license-severity-level <level>',
