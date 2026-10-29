@@ -367,7 +367,7 @@ export const cliSetup = (program: Command) =>
     )
     .option(
       '--fail-on-malware-scan',
-      'Let Aikido fail when new malware issues have been detected...'
+      'Let Aikido fail when new malware issues have been detected. Only available for Pro members and up.'
     )
     .addOption(
       new Option(
