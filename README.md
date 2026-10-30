@@ -47,7 +47,6 @@ Options:
   --fail-on-secrets-scan            Let Aikido fail when new exposed secrets have been detected
   --fail-on-license-scan            Let Aikido fail when new license issues have been detected. Only available on paid plans.
   --minimum-license-severity-level <level>  Set the minimum license severity level. Accepted options are: HIGH and CRITICAL.
-  --fail-on-malware-scan            Let Aikido fail when new malware issues have been detected. Only available on paid plans.
   --minimum-severity-level <level>  Set the minimum severity level. Accepted options are: LOW, MEDIUM, HIGH and CRITICAL. (choices: "LOW", "MEDIUM",
                                     "HIGH", "CRITICAL")
   --poll-interval [interval]        The poll interval when checking for an updated scan result (preset: 10)
