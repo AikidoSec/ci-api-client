@@ -8,7 +8,6 @@ import {
   startScan,
   uploadCustomScanResult,
 } from '../aikidoApi.js';
-import { getApiKey } from '../configuration.js';
 import {
   outputError,
   outputHttpError,
@@ -41,12 +40,6 @@ type TUploadUserCliOptions = {
 };
 
 async function cli(options: TUploadUserCliOptions, command: string) {
-  const apiKey = getApiKey();
-
-  if (!apiKey) {
-    outputError('Please set an api key using: aikido-cli-client apikey <key>');
-  }
-
   // Process command options and group them into apiOptions hash
   const { apiOptions, cliOptions } = await parseCliOptions(options);
 
