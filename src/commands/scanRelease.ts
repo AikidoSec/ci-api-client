@@ -62,6 +62,7 @@ type TScanUserCliOptions = {
   failOnSecretsScan?: boolean;
   failOnIacScan?: boolean;
   failOnLicenseScan?: boolean;
+  failOnMalwareScan?: boolean;
   minimumSeverityLevel?: string;
   minimumLicenseSeverityLevel?: string;
   pollInterval?: number;
@@ -271,7 +272,7 @@ export const scan = async ({
 const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   // Version provided to the API corresponds with the version in package.json
   // of the cli client
-  const apiOptions: TScanApiOptions = { version: '1.0.18' };
+  const apiOptions: TScanApiOptions = { version: '1.0.22' };
   const cliOptions: TScanCliOptions = { pollInterval: 10, json: false };
 
   if (userCliOptions.pullRequestTitle) {
@@ -303,6 +304,9 @@ const parseCliOptions = (userCliOptions: TScanUserCliOptions) => {
   }
   if (userCliOptions.failOnLicenseScan != undefined) {
     apiOptions.fail_on_license_scan = userCliOptions.failOnLicenseScan;
+  }
+  if (userCliOptions.failOnMalwareScan != undefined) {
+    apiOptions.fail_on_malware_scan = userCliOptions.failOnMalwareScan;
   }
   if (userCliOptions.minimumSeverityLevel) {
     apiOptions.minimum_severity = userCliOptions.minimumSeverityLevel;
@@ -385,6 +389,10 @@ export const cliSetup = (program: Command) =>
       )
         .choices(['HIGH', 'CRITICAL'])
         .default('HIGH')
+    )
+    .option(
+      '--fail-on-malware-scan',
+      'Let Aikido fail when new malware issues have been detected. Only available on paid plans.'
     )
     .addOption(
       new Option(

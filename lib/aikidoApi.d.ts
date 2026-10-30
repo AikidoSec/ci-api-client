@@ -13,6 +13,7 @@ export type TScanApiOptions = {
     fail_on_iac_scan?: boolean;
     fail_on_secrets_scan?: boolean;
     fail_on_license_scan?: boolean;
+    fail_on_malware_scan?: boolean;
     minimum_severity?: string;
     minimum_license_severity?: string;
     version: string;
@@ -81,4 +82,18 @@ export type TUploadResult = {
     success: number;
 };
 export declare function uploadCustomScanResult(data: TUploadApiOptions): Promise<TUploadResult>;
+export type TUploadCodeCoverageFile = {
+    filename: string;
+    format: 'lcov' | 'cobertura';
+    content: string;
+};
+export type TUploadCodeCoverageOptions = {
+    repository_id: string | number;
+    commit_sha: string;
+    branch_name: string;
+    repository_source_paths: string[];
+    eof: Record<string, number>;
+    files: TUploadCodeCoverageFile[];
+};
+export declare function uploadCodeCoverage(data: TUploadCodeCoverageOptions): Promise<any>;
 export {};

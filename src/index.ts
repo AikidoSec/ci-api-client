@@ -6,6 +6,7 @@ import apiKey from './commands/apiKey.js';
 import scan from './commands/scan.js';
 import scanRelease from './commands/scanRelease.js';
 import upload from './commands/upload.js';
+import uploadCoverage from './commands/uploadCoverage.js';
 
 // Load all .env configuration variables and auto-inject them into process.env
 dotenv.config(
@@ -20,13 +21,14 @@ program
   .description(
     'CLI api client to easily integrate the Aikido public CI API into custom deploy scripts'
   )
-  .version('1.0.18');
+  .version('1.0.22');
 
 // Load in all app commands and set them up in the `program` instance
 apiKey.cliSetup(program);
 scan.cliSetup(program);
 scanRelease.cliSetup(program);
 upload.cliSetup(program);
+uploadCoverage.cliSetup(program);
 
 // Override global process.env type
 declare global {
