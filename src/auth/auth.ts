@@ -1,20 +1,23 @@
-import { getApiKey } from '../configuration.js';
+import { getApiKey, shouldUseOidc } from '../configuration.js';
 import { outputDebug, outputError } from '../output.js';
 import { buildApiKeyAuth } from './apikey.js';
 import { buildOidcAuth } from './oidc.js';
 import { Auth } from './types.js';
 
 export async function resolveAuth(): Promise<Auth> {
-  // Prefer OIDC when available; on failure fall through to API key
-  try {
-    const auth = await buildOidcAuth();
-    outputDebug(`Auth mode: OIDC, baseUrl=${auth.baseUrl}`);
-
-    return auth;
-  } catch (error) {
-    outputDebug(
-      `OIDC unavailable (${error instanceof Error ? error.message : String(error)}); trying API key`
-    );
+  const useOidc = shouldUseOidc();
+  if (useOidc) {
+    try {
+      const auth = await buildOidcAuth();
+      outputDebug(`Auth mode: OIDC, baseUrl=${auth.baseUrl}`);
+  
+      return auth;
+    } catch (error) {
+      outputError(
+        `OIDC unavailable (${error instanceof Error ? error.message : String(error)}).`
+      );
+      process.exit(1);
+    }
   }
 
   const staticApiKey = getApiKey();

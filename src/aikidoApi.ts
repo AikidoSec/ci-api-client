@@ -2,6 +2,7 @@ import axios from 'axios';
 import { gzipSync } from 'node:zlib';
 import { resolveAuth } from './auth/auth.js';
 import { outputDebug } from './output.js';
+import { shouldUseOidc } from './configuration.js';
 
 // #region Scan start
 export type TScanApiOptions = {
@@ -36,7 +37,7 @@ export async function startScan(
 ): Promise<TStartScanResult> {
   const auth = await resolveAuth();
 
-  const oidcOrApiKeyUrlSegment = auth.withOidc ? 'oidc_continuous_integration' : 'continuous_integration';
+  const oidcOrApiKeyUrlSegment = shouldUseOidc() ? 'oidc_continuous_integration' : 'continuous_integration';
   const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/repository`;
   const requestConfig = {
     method: 'POST',
@@ -118,7 +119,7 @@ export async function pollScanStatus(
 > {
   const auth = await resolveAuth();
 
-  const oidcOrApiKeyUrlSegment = auth.withOidc ? 'oidc_continuous_integration' : 'continuous_integration';
+  const oidcOrApiKeyUrlSegment = shouldUseOidc() ? 'oidc_continuous_integration' : 'continuous_integration';
   const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/repository`;
   const requestConfig = {
     method: 'GET',
@@ -159,7 +160,7 @@ export async function uploadCustomScanResult(
 ): Promise<TUploadResult> {
   const auth = await resolveAuth();
 
-  const oidcOrApiKeyUrlSegment = auth.withOidc ? 'oidc_continuous_integration' : 'continuous_integration';
+  const oidcOrApiKeyUrlSegment = shouldUseOidc() ? 'oidc_continuous_integration' : 'continuous_integration';
   const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/custom`;
   const requestConfig = {
     method: 'POST',
@@ -197,7 +198,7 @@ export type TUploadCodeCoverageOptions = {
 export async function uploadCodeCoverage(data: TUploadCodeCoverageOptions) {
   const auth = await resolveAuth();
   
-  const oidcOrApiKeyUrlSegment = auth.withOidc ? 'oidc_continuous_integration' : 'continuous_integration';
+  const oidcOrApiKeyUrlSegment = shouldUseOidc() ? 'oidc_continuous_integration' : 'continuous_integration';
   const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/code_coverage`;
   const requestConfig = {
     method: 'POST',

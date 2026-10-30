@@ -49,7 +49,7 @@ export const outputHttpError = (axiosError: AxiosError): void => {
           );
         case 403:
           return outputError(
-            `${statusStr}: Could not authenticate with the Aikido API. Verify your API key or OIDC setup (\`--region\` must match your workspace).`
+            `${statusStr}: Could not authenticate with the Aikido API. Verify your API key or OIDC setup ( \`--use-oidc\` and \`--region\` must match your workspace).`
           );
         case 500:
           return outputError(

@@ -19,3 +19,7 @@ export const getApiKey = () => {
 export const setApiKey = (newApiKey: string) => {
   return getConfigStore().set('apikey', newApiKey);
 };
+
+export const shouldUseOidc = () => {
+  return program.getOptionValue('use-oidc') || process.env.USE_OIDC?.toLowerCase().trim() === 'true';
+}

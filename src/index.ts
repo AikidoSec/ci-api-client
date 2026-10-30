@@ -69,6 +69,10 @@ program.option(
 );
 
 program.option(
+  '--use-oidc',
+  'Use OIDC authentication instead of Aikido API key'
+);
+program.option(
   '--region <region>',
   'Aikido region (eu, us, au, us-gov, me). Default: eu for OIDC; API keys usually encode the region'
 );

@@ -25,7 +25,6 @@ export async function buildOidcAuth(): Promise<Auth> {
       'Content-Type': 'application/json',
       'X-AIK-OIDC-SECRET': token,
     },
-    withOidc: true,
   };
 }
 

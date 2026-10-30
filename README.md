@@ -23,7 +23,7 @@ $ yarn global add @aikidosec/ci-api-client
 
 Precedence: `--apikey` → GitHub Actions OIDC → stored API key.
 
-**GitHub Actions OIDC (no API token):** add `permissions: id-token: write`, connect the repo in Aikido, and pass `--region` / `AIKIDO_REGION` (`eu`, `us`, `au`, 'me', `us-gov`; default `eu`).
+**GitHub Actions OIDC (no API token):** add `permissions: id-token: write`, connect the repo in Aikido, and pass `--use-oidc` and additionally `--region` / `AIKIDO_REGION` (`eu`, `us`, `au`, 'me', `us-gov`; default `eu`).
 
 ```yaml
 permissions:
@@ -32,7 +32,7 @@ permissions:
 steps:
   - uses: actions/checkout@v4
   - run: npm install --global @aikidosec/ci-api-client
-  - run: aikido-api-client scan-release ${{ github.event.repository.name }} $GITHUB_SHA --region eu
+  - run: aikido-api-client scan-release ${{ github.event.repository.name }} $GITHUB_SHA --use-oidc --region us
 ```
 
 ⚠️ Your OIDC token is never written to disk; it is only held in memory for the duration of the CLI process.

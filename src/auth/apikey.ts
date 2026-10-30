@@ -15,8 +15,7 @@ export function buildApiKeyAuth(
     headers: {
       'Content-Type': 'application/json',
       'X-AIK-API-SECRET': apiKey,
-    },
-    withOidc: false,
+    }
   };
 }
 
