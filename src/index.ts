@@ -68,14 +68,24 @@ program.option(
   'Use a cli apikey instead of reading the key from the configuration'
 );
 
-program.option(
-  '--use-oidc',
-  'Use OIDC authentication instead of Aikido API key'
-);
-program.option(
-  '--region <region>',
-  'Aikido region (eu, us, au, us-gov, me). Default: eu for OIDC; API keys usually encode the region'
-);
+program
+  .option(
+    '--use-oidc',
+    'Use OIDC authentication instead of Aikido API key. Also reads USE_OIDC'
+  )
+  .on('option:use-oidc', function () {
+    process.env.USE_OIDC = 'true';
+  });
+
+program
+  .option(
+    '--region <region>',
+    'Aikido region (eu, us, au, us-gov, me). Default: eu; also reads AIKIDO_REGION',
+    'eu'
+  )
+  .on('option:region', function (region) {
+    process.env.AIKIDO_REGION = region;
+  });
 
 program.configureOutput({
   outputError: (str, write) => write(chalk.red(str)),

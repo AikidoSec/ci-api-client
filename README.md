@@ -21,9 +21,9 @@ $ yarn global add @aikidosec/ci-api-client
 
 ### Authentication
 
-Precedence: `--apikey` → GitHub Actions OIDC → stored API key.
+Precedence: `--use-oidc` / `USE_OIDC=true` (OIDC) → `--apikey` → stored API key. When OIDC is enabled, any API key is ignored.
 
-**GitHub Actions OIDC (no API token):** add `permissions: id-token: write`, connect the repo in Aikido, and pass `--use-oidc` and additionally `--region` / `AIKIDO_REGION` (`eu`, `us`, `au`, 'me', `us-gov`; default `eu`).
+**GitHub Actions OIDC (no API token):** add `permissions: id-token: write`, connect the repo in Aikido, and pass `--use-oidc` (or `USE_OIDC=true`) and additionally `--region` / `AIKIDO_REGION` (`eu`, `us`, `au`, `me`, `us-gov`; default `eu`).
 
 ```yaml
 permissions:

@@ -20,6 +20,14 @@ export const setApiKey = (newApiKey: string) => {
   return getConfigStore().set('apikey', newApiKey);
 };
 
-export const shouldUseOidc = () => {
-  return program.getOptionValue('use-oidc') || process.env.USE_OIDC?.toLowerCase().trim() === 'true';
-}
+export const getUseOidc = () => {
+  return Boolean(program.getOptionValue('use-oidc')) || String(process.env.USE_OIDC).toLowerCase().trim() === 'true';
+};
+
+export const getRegion = () => {
+  return String(
+    process.env.AIKIDO_REGION || program.getOptionValue('region') || 'eu'
+  )
+    .toLowerCase()
+    .trim();
+};

@@ -4,6 +4,6 @@ export type Auth = {
 };
 
 export type OidcData = {
-    requestUrl: string;
-    requestToken: string;
+  requestUrl: string;
+  requestToken: string;
 };

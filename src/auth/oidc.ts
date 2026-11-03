@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getGithubOidcData, isGithubOidcProvider } from './githubOidc.js';
-import { program } from '../index.js';
 import { OidcData, Auth } from './types.js';
+import { getRegion } from '../configuration.js';
 
 // Cache within one CLI process; refresh 60s before JWT exp for long polls.
 const REFRESH_BEFORE_EXPIRING_TIME = 60_000; //
@@ -28,14 +28,8 @@ export async function buildOidcAuth(): Promise<Auth> {
   };
 }
 
-
 function baseUrlForRegion(): string {
-  const fromOption = program.getOptionValue('region');
-  let region = process.env.AIKIDO_REGION?.toLowerCase().trim() ?? 'eu';
-
-  if (fromOption) {
-    region = String(fromOption).toLowerCase().trim();
-  }
+  const region = getRegion();
 
   if (process.env.DEVELOPMENT === 'true' || process.env.DEVELOPMENT === '1') {
     return process.env.AIKIDO_API || 'https://app.test.aikido.dev';
@@ -54,6 +48,9 @@ function baseUrlForRegion(): string {
   if (region === 'au') {
     return process.env.AIKIDO_AU_API || baseUrl;
   }
+  if (region === 'me') {
+    return process.env.AIKIDO_ME_API || baseUrl;
+  }
   if (region === 'eu') {
     return process.env.AIKIDO_API || baseUrl;
   }
@@ -69,10 +66,10 @@ async function fetchOidcToken(audience: string): Promise<string> {
     return cache.token;
   }
 
- const oidcData = getOidcData(audience);
+  const oidcData = getOidcData(audience);
 
   if (!oidcData) {
-    throw new Error('OIDC is not available.\n\n')
+    throw new Error('OIDC is not available.\n\n');
   }
 
   const response = await axios.get(oidcData.requestUrl, {
@@ -87,13 +84,16 @@ async function fetchOidcToken(audience: string): Promise<string> {
   }
 
   const expiresAtMs = jwtExpiresAtMs(token);
-  cache = expiresAtMs ? { token, audience, expiresAtMs } : null;
+  if (!expiresAtMs) {
+    throw new Error('OIDC response did not include an expiration time');
+  }
+  cache = { token, audience, expiresAtMs };
 
   return token;
 }
 
 function getOidcData(audience: string): OidcData | null {
-  if(isGithubOidcProvider()) {
+  if (isGithubOidcProvider()) {
     return getGithubOidcData(audience);
   }
 

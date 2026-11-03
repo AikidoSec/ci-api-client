@@ -1,4 +1,4 @@
-import { Auth } from "./types.js";
+import { Auth } from './types.js';
 
 const BASE_URLS: Record<string, string> = {
   eu: 'https://app.aikido.dev',
@@ -7,15 +7,13 @@ const BASE_URLS: Record<string, string> = {
   au: 'https://app.au.aikido.dev',
 };
 
-export function buildApiKeyAuth(
-  apiKey: string,
-): Auth {
+export function buildApiKeyAuth(apiKey: string): Auth {
   return {
     baseUrl: baseUrlForRegion(apiKey),
     headers: {
       'Content-Type': 'application/json',
       'X-AIK-API-SECRET': apiKey,
-    }
+    },
   };
 }
 

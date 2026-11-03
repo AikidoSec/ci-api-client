@@ -1,7 +1,7 @@
 import { outputDebug } from '../output.js';
 import { OidcData } from './types.js';
 
-export function getGithubOidcData( audience: string): OidcData | null {
+export function getGithubOidcData(audience: string): OidcData | null {
   // These env vars are set by GitHub Actions when the `permissions: id-token: write` permission is granted.
   const requestUrl = process.env.ACTIONS_ID_TOKEN_REQUEST_URL;
   const requestToken = process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN;
@@ -12,10 +12,8 @@ export function getGithubOidcData( audience: string): OidcData | null {
 
   const url = assertSafeGithubOidcRequestUrl(requestUrl);
   url.searchParams.set('audience', audience);
-  
-  outputDebug(
-    `Requesting GitHub Actions OIDC token for audience: ${audience}`
-  );
+
+  outputDebug(`Requesting GitHub Actions OIDC token for audience: ${audience}`);
 
   return { requestUrl: url.toString(), requestToken };
 }

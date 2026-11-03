@@ -2,7 +2,6 @@ import axios from 'axios';
 import { gzipSync } from 'node:zlib';
 import { resolveAuth } from './auth/auth.js';
 import { outputDebug } from './output.js';
-import { shouldUseOidc } from './configuration.js';
 
 // #region Scan start
 export type TScanApiOptions = {
@@ -36,15 +35,13 @@ export async function startScan(
   data: TScanApiOptions
 ): Promise<TStartScanResult> {
   const auth = await resolveAuth();
-
-  const oidcOrApiKeyUrlSegment = shouldUseOidc() ? 'oidc_continuous_integration' : 'continuous_integration';
-  const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/repository`;
+  
+  const requestUrl = `${auth.baseUrl}/api/integrations/continuous_integration/scan/repository`;
   const requestConfig = {
     method: 'POST',
     data,
     headers: auth.headers,
   };
-
 
   outputDebug(`API request: ${requestUrl}`);
   outputDebug(requestConfig);
@@ -119,8 +116,7 @@ export async function pollScanStatus(
 > {
   const auth = await resolveAuth();
 
-  const oidcOrApiKeyUrlSegment = shouldUseOidc() ? 'oidc_continuous_integration' : 'continuous_integration';
-  const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/repository`;
+  const requestUrl = `${auth.baseUrl}/api/integrations/continuous_integration/scan/repository`;
   const requestConfig = {
     method: 'GET',
     params: { scan_id: scanId },
@@ -160,8 +156,7 @@ export async function uploadCustomScanResult(
 ): Promise<TUploadResult> {
   const auth = await resolveAuth();
 
-  const oidcOrApiKeyUrlSegment = shouldUseOidc() ? 'oidc_continuous_integration' : 'continuous_integration';
-  const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/custom`;
+  const requestUrl = `${auth.baseUrl}/api/integrations/continuous_integration/scan/custom`;
   const requestConfig = {
     method: 'POST',
     data,
@@ -194,12 +189,10 @@ export type TUploadCodeCoverageOptions = {
   files: TUploadCodeCoverageFile[];
 };
 
-
 export async function uploadCodeCoverage(data: TUploadCodeCoverageOptions) {
   const auth = await resolveAuth();
-  
-  const oidcOrApiKeyUrlSegment = shouldUseOidc() ? 'oidc_continuous_integration' : 'continuous_integration';
-  const requestUrl = `${auth.baseUrl}/api/integrations/${oidcOrApiKeyUrlSegment}/scan/code_coverage`;
+
+  const requestUrl = `${auth.baseUrl}/api/integrations/continuous_integration/scan/code_coverage`;
   const requestConfig = {
     method: 'POST',
     data: {
