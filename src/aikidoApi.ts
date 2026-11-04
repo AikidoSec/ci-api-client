@@ -214,7 +214,6 @@ export async function uploadCodeCoverage(data: TUploadCodeCoverageOptions) {
 
   outputDebug(`API request: ${requestUrl}`);
   outputDebug({
-    ...requestConfig,
     data: {
       ...requestConfig.data,
       files: requestConfig.data.files.map((file) => ({
