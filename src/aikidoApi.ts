@@ -46,7 +46,7 @@ export async function startScan(
   };
 
   outputDebug(`API request: ${requestUrl}`);
-  outputDebug(requestConfig);
+  outputDebug(data);
 
   const resultData = (await axios(requestUrl, requestConfig)).data;
   outputDebug(resultData);
@@ -126,7 +126,7 @@ export async function pollScanStatus(
   };
 
   outputDebug(`API request: ${requestUrl}`);
-  outputDebug(requestConfig);
+  outputDebug({ scan_id: scanId });
 
   const resultData = (await axios(requestUrl, requestConfig)).data;
   outputDebug(resultData);
@@ -166,7 +166,7 @@ export async function uploadCustomScanResult(
   };
 
   outputDebug(`API request: ${requestUrl}`);
-  outputDebug(requestConfig);
+  outputDebug(data);
 
   const resultData = (await axios(requestUrl, requestConfig)).data;
   outputDebug(resultData);
