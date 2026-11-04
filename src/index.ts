@@ -71,7 +71,7 @@ program.option(
 program
   .option(
     '--use-oidc',
-    'Use OIDC authentication instead of Aikido API key. Also reads USE_OIDC'
+    'Use OIDC authentication instead of Aikido API key. Also reads USE_OIDC. Currenlty only supported on Github Cloud'
   )
   .on('option:use-oidc', function () {
     process.env.USE_OIDC = 'true';

@@ -35,7 +35,7 @@ steps:
   - run: aikido-api-client scan-release ${{ github.event.repository.name }} $GITHUB_SHA --use-oidc --region us
 ```
 
-⚠️ Your OIDC token is never written to disk; it is only held in memory for the duration of the CLI process.
+⚠️ Your OIDC token is never written to disk; it is only held in memory for the duration of the CLI process. Currently only supported on Github Cloud
 
 **Aikido API key:** You can add your key by requesting a token on the [Continuous Integrations page](https://app.aikido.dev/settings/integrations/continuous-integration) in the [Integrations](https://app.aikido.dev/settings/integrations) section of the Aikido web platform. Click the "Start integrating" link and setup your key globally by executing
 

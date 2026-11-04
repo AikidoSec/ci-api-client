@@ -42,22 +42,6 @@ function baseUrlForRegion(): string {
     );
   }
 
-  if (region === 'us') {
-    return process.env.AIKIDO_US_API || baseUrl;
-  }
-  if (region === 'au') {
-    return process.env.AIKIDO_AU_API || baseUrl;
-  }
-  if (region === 'me') {
-    return process.env.AIKIDO_ME_API || baseUrl;
-  }
-  if (region === 'eu') {
-    return process.env.AIKIDO_API || baseUrl;
-  }
-  if (region === 'us-gov') {
-    return process.env.AIKIDO_US_GOV_API || baseUrl;
-  }
-
   return baseUrl;
 }
 

@@ -26,7 +26,6 @@ export async function resolveAuth(): Promise<Auth> {
 
     try {
       const auth = await buildOidcAuth();
-
       return auth;
     } catch (error) {
       outputError(
