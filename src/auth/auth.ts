@@ -26,7 +26,6 @@ export async function resolveAuth(): Promise<Auth> {
 
     try {
       const auth = await buildOidcAuth();
-      outputLog(`Auth mode: OIDC, baseUrl=${auth.baseUrl}`);
 
       return auth;
     } catch (error) {
@@ -41,8 +40,6 @@ export async function resolveAuth(): Promise<Auth> {
 
   if (staticApiKey) {
     const auth = buildApiKeyAuth(staticApiKey);
-    outputLog(`Auth mode: apikey, baseUrl=${auth.baseUrl}`);
-
     return auth;
   }
 
