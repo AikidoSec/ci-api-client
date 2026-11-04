@@ -21,7 +21,7 @@ program
   .description(
     'CLI api client to easily integrate the Aikido public CI API into custom deploy scripts'
   )
-  .version('1.0.25');
+  .version('1.0.26');
 
 // Load in all app commands and set them up in the `program` instance
 apiKey.cliSetup(program);
@@ -67,6 +67,25 @@ program.option(
   '--apikey <apikey>',
   'Use a cli apikey instead of reading the key from the configuration'
 );
+
+program
+  .option(
+    '--use-oidc',
+    'Use OIDC authentication instead of Aikido API key. Also reads USE_OIDC. Currenlty only supported on Github Cloud'
+  )
+  .on('option:use-oidc', function () {
+    process.env.USE_OIDC = 'true';
+  });
+
+program
+  .option(
+    '--region <region>',
+    'Aikido region (eu, us, au, us-gov, me). Default: eu; also reads AIKIDO_REGION',
+    'eu'
+  )
+  .on('option:region', function (region) {
+    process.env.AIKIDO_REGION = region;
+  });
 
 program.configureOutput({
   outputError: (str, write) => write(chalk.red(str)),

@@ -2,6 +2,7 @@ import ora, { Ora } from 'ora';
 import { program } from './index.js';
 import { AxiosError } from 'axios';
 import chalk from 'chalk';
+import { getUseOidc } from './configuration.js';
 
 // Output a console message
 export const outputLog = (message: string): void => {
@@ -42,14 +43,34 @@ export const outputHttpError = (axiosError: AxiosError): void => {
   if (axiosError.isAxiosError) {
     if (axiosError.response) {
       const statusStr = `${axiosError.response.status} ${axiosError.response.statusText}`;
+      const useOidc = getUseOidc();
+
       switch (axiosError.response.status) {
         case 401:
+          if (useOidc) {
+            return outputError(
+              oidcFailureMessage(
+                axiosError,
+                `${statusStr}: OIDC authentication was rejected`,
+                'Ensure the repo is connected to Aikido, the job has `permissions: id-token: write`, and `--region` matches your workspace.'
+              )
+            );
+          }
           return outputError(
-            `${statusStr}: The provided api key is most likely no longer valid and has been rotated or revoked. Visit https://app.aikido.dev/settings/integrations/continuous-integration to generate a new key.`
+            `${statusStr}: Authentication failed. The provided API key is most likely no longer valid and has been rotated or revoked. Generate a new key at https://app.aikido.dev/settings/integrations/continuous-integration`
           );
         case 403:
+          if (useOidc) {
+            return outputError(
+              oidcFailureMessage(
+                axiosError,
+                `${statusStr}: Could not authenticate with the Aikido API via OIDC`,
+                'Verify your OIDC setup (`--use-oidc` and `--region` must match your workspace).'
+              )
+            );
+          }
           return outputError(
-            `${statusStr}: Could not authenticate with the Aikido API. Please verify your Aikdio API key.`
+            `${statusStr}: Could not authenticate with the Aikido API. Please verify your Aikido API key.`
           );
         case 500:
           return outputError(
@@ -70,6 +91,22 @@ export const outputHttpError = (axiosError: AxiosError): void => {
   return outputError(
     'Unexpected error occurred. Please contact us if this problem persists.'
   );
+};
+
+const oidcFailureMessage = (axiosError: AxiosError,prefix: string,fallbackHint: string): string => {
+  const data = axiosError.response?.data as any;
+  const fromBody = typeof data === 'string' ? data : data?.reason_phrase || data?.error || data?.message || data?.detail;
+
+  if (typeof fromBody === 'string' && fromBody.trim()) {
+    return `${prefix}: ${fromBody.trim()}`;
+  }
+
+  const detail = axiosError.response?.statusText?.trim() ?? null;
+  if (!detail) {
+    return `${prefix}. ${fallbackHint}`;
+  }
+
+  return `${prefix}: ${detail}`;
 };
 
 // Start a new spinner

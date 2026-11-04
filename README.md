@@ -19,7 +19,25 @@ $ npm install -g @aikidosec/ci-api-client
 $ yarn global add @aikidosec/ci-api-client
 ```
 
-After installation, you'll need to setup your Aikido API key. You can add your key by requesting a token on the [Continuous Integrations page](https://app.aikido.dev/settings/integrations/continuous-integration) in the [Integrations](https://app.aikido.dev/settings/integrations) section of the Aikido web platform. Click the "Start integrating" link and setup your key globally by executing
+### Authentication
+
+Precedence: `--use-oidc` / `USE_OIDC=true` (OIDC) → `--apikey` → stored API key. When OIDC is enabled, any API key is ignored.
+
+**GitHub Actions OIDC (no API token):** add `permissions: id-token: write`, connect the repo in Aikido, and pass `--use-oidc` (or `USE_OIDC=true`) and additionally `--region` / `AIKIDO_REGION` (`eu`, `us`, `au`, `me`, `us-gov`; default `eu`).
+
+```yaml
+permissions:
+  id-token: write
+  contents: read
+steps:
+  - uses: actions/checkout@v4
+  - run: npm install --global @aikidosec/ci-api-client
+  - run: aikido-api-client scan-release ${{ github.event.repository.name }} $GITHUB_SHA --use-oidc --region us
+```
+
+⚠️ Your OIDC token is never written to disk; it is only held in memory for the duration of the CLI process. Currently only supported on Github Cloud.
+
+**Aikido API key:** You can add your key by requesting a token on the [Continuous Integrations page](https://app.aikido.dev/settings/integrations/continuous-integration) in the [Integrations](https://app.aikido.dev/settings/integrations) section of the Aikido web platform. Click the "Start integrating" link and setup your key globally by executing
 
 ```sh
 $ aikido-api-client apikey <your-api-key-here>
