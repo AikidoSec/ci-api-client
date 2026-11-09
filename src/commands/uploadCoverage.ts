@@ -2,7 +2,6 @@ import { Command } from 'commander';
 import { Ora } from 'ora';
 import { uploadCodeCoverage } from '../aikidoApi.js';
 import { collectUploadPayload } from '../codeCoverage/collectUploadPayload.js';
-import { getApiKey } from '../configuration.js';
 import {
   outputError,
   outputHttpError,
@@ -19,13 +18,6 @@ type TUploadCoverageUserCliOptions = {
 };
 
 async function cli(options: TUploadCoverageUserCliOptions) {
-  const apiKey = getApiKey();
-
-  if (!apiKey) {
-    outputError('Please set an api key using: aikido-api-client apikey <key>');
-    return;
-  }
-
   let filePaths: string[];
   try {
     filePaths = await resolveInputFilePatterns(normalizeFilePaths(options.filePaths));
