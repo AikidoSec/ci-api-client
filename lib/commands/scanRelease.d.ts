@@ -22,6 +22,7 @@ type TScanUserCliOptions = {
     failOnSecretsScan?: boolean;
     failOnIacScan?: boolean;
     failOnLicenseScan?: boolean;
+    failOnMalwareScan?: boolean;
     minimumSeverityLevel?: string;
     minimumLicenseSeverityLevel?: string;
     pollInterval?: number;
