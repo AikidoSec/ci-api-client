@@ -40,7 +40,7 @@
     "@types/configstore": "6.0.0",
     "@types/dotenv": "8.2.0",
     "@types/node": "20.3.3",
-    "nodemon": "2.0.22",
+    "nodemon": "3.1.11",
     "prettier": "2.8.8",
     "ts-node": "10.9.1",
     "typescript": "5.1.6"
@@ -51,6 +51,8 @@
     "cli"
   ],
   "overrides": {
-    "form-data@<=4.0.4": "4.0.4"
+    "form-data@<=4.0.4": "4.0.4",
+    "follow-redirects@<=1.16.0": "1.16.2",
+    "picomatch@<=2.3.1": "2.3.2"
   }
 }
